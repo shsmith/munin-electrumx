@@ -1,0 +1,101 @@
+#!/bin/sh
+# -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+electrumx_lsof - Plugin to monitor ElectrumX server.
+
+=head1 CONFIGURATION
+
+No configuration
+
+=head1 NOTES
+
+Uses the command "electrumx_rpc.py"
+
+=head1 AUTHOR
+
+hsmiths
+
+=head1 LICENSE
+
+GPLv2
+
+=head1 MAGIC MARKERS
+
+ #%# family=auto
+ #%# capabilities=autoconf
+
+=cut
+
+. $MUNIN_LIBDIR/plugins/plugin.sh
+
+if [ "$1" = "autoconf" ]; then
+	if ( electrumx_rpc.py getinfo >/dev/null 2>&1 ); then
+		echo yes
+		exit 0
+	else
+		if [ $? -eq 127 ]; then
+			echo "no (could not run \"electrumx_rpc.py\")"
+			exit 0
+		else
+			echo no
+			exit 0
+		fi
+	fi
+fi
+
+if [ "$1" = "config" ]; then
+	echo 'graph_title ElectrumX Files'
+	echo 'graph_args --base 1000 -l 0'
+	echo 'graph_vlabel value'
+	echo 'graph_scale no'
+	echo 'graph_category ElectrumX'
+	echo 'lsof.label total'
+	echo 'lsof.type GAUGE'
+	echo 'lsof.max 10000'
+	echo 'ipv4.label ipv4'
+	echo 'ipv4.type GAUGE'
+	echo 'ipv4.max 10000'
+	echo 'ipv6.label ipv6'
+	echo 'ipv6.type GAUGE'
+	echo 'ipv6.max 10000'
+	echo 'sock.label sock'
+	echo 'sock.type GAUGE'
+	echo 'sock.max 10000'
+	echo 'db.label db'
+	echo 'db.type GAUGE'
+	echo 'db.max 10000'
+	exit 0
+fi
+
+#{
+#    "closing": 0,
+#    "daemon_height": 443912,
+#    "db_height": 443912,
+#    "errors": 0,
+#    "groups": 1,
+#    "logged": 0,
+#    "peers": 53,
+#    "pid": 23142,
+#    "requests": 0,
+#    "sessions": 50,
+#    "subs": 974,
+#    "txs_sent": 1
+#}
+
+TFILE=/tmp/munin-electrumx-lsof
+/usr/local/bin/electrumx_rpc.py getinfo > $TFILE
+
+pid=`grep pid $TFILE | grep -o '[0-9]*'`
+/usr/bin/lsof -p $pid -n > $TFILE
+
+echo "lsof.value `/usr/bin/wc -l < $TFILE`"
+echo "ipv4.value `grep IPv4 $TFILE | /usr/bin/wc -l`"
+echo "ipv6.value `grep IPv6 $TFILE | /usr/bin/wc -l`"
+echo "sock.value `grep sock $TFILE | /usr/bin/wc -l`"
+echo "db.value `grep -v -e sock -e IPv $TFILE | /usr/bin/wc -l`"
+
+rm $TFILE

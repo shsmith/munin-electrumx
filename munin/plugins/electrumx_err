@@ -1,0 +1,90 @@
+#!/bin/sh
+# -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+electrumx_err - Plugin to monitor ElectrumX server.
+
+=head1 CONFIGURATION
+
+No configuration
+
+=head1 NOTES
+
+Uses the command "electrumx_rpc.py"
+
+=head1 AUTHOR
+
+shsmith
+
+=head1 LICENSE
+
+GPLv2
+
+=head1 MAGIC MARKERS
+
+ #%# family=auto
+ #%# capabilities=autoconf
+
+=cut
+
+. $MUNIN_LIBDIR/plugins/plugin.sh
+
+if [ "$1" = "autoconf" ]; then
+	if ( electrumx_rpc.py getinfo >/dev/null 2>&1 ); then
+		echo yes
+		exit 0
+	else
+		if [ $? -eq 127 ]; then
+			echo "no (could not run \"electrumx_rpc.py\")"
+			exit 0
+		else
+			echo no
+			exit 0
+		fi
+	fi
+fi
+
+if [ "$1" = "config" ]; then
+
+	echo 'graph_title ElectrumX Errors and Queues'
+	echo 'graph_args --base 1000 -l 0'
+	echo 'graph_vlabel value'
+	echo 'graph_category ElectrumX'
+	echo 'errors.label Errors'
+	echo 'errors.type GAUGE'
+	echo 'errors.max 10000'
+	echo 'groups.label Groups'
+	echo 'groups.type GAUGE'
+	echo 'groups.max 10000'
+	echo 'closing.label Closing'
+	echo 'closing.type GAUGE'
+	echo 'closing.max 10000'
+	exit 0
+fi
+
+#{
+#    "closing": 0,
+#    "daemon_height": 443912,
+#    "db_height": 443912,
+#    "errors": 0,
+#    "groups": 1,
+#    "logged": 0,
+#    "peers": 53,
+#    "pid": 23142,
+#    "requests": 0,
+#    "sessions": 50,
+#    "subs": 974,
+#    "txs_sent": 1
+#}
+
+TFILE=/tmp/munin-electrumx-err
+/usr/local/bin/electrumx_rpc.py getinfo > $TFILE
+
+echo "errors.value `grep errors $TFILE | grep -o '[0-9]*'`"
+echo "groups.value `grep groups $TFILE | grep -o '[0-9]*'`"
+echo "closing.value `grep closing $TFILE | grep -o '[0-9]*'`"
+
+rm $TFILE
