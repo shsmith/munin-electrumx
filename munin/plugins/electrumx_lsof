@@ -17,7 +17,7 @@ Uses the command "electrumx_rpc.py"
 
 =head1 AUTHOR
 
-hsmiths
+shsmith
 
 =head1 LICENSE
 
@@ -30,7 +30,9 @@ GPLv2
 
 =cut
 
-. $MUNIN_LIBDIR/plugins/plugin.sh
+if [ -e $MUNIN_LIBDIR/plugins/plugin.sh ]; then
+	. $MUNIN_LIBDIR/plugins/plugin.sh
+fi
 
 if [ "$1" = "autoconf" ]; then
 	if ( electrumx_rpc.py getinfo >/dev/null 2>&1 ); then
@@ -68,6 +70,9 @@ if [ "$1" = "config" ]; then
 	echo 'db.label db'
 	echo 'db.type GAUGE'
 	echo 'db.max 10000'
+	echo 'sessions.label sessions'
+	echo 'sessions.type GAUGE'
+	echo 'sessions.max 10000'
 	exit 0
 fi
 
@@ -90,12 +95,14 @@ TFILE=/tmp/munin-electrumx-lsof
 /usr/local/bin/electrumx_rpc.py getinfo > $TFILE
 
 pid=`grep pid $TFILE | grep -o '[0-9]*'`
+echo "sessions.value `grep sessions $TFILE | grep -o '[0-9]*'`"
+
 /usr/bin/lsof -p $pid -n > $TFILE
 
 echo "lsof.value `/usr/bin/wc -l < $TFILE`"
 echo "ipv4.value `grep IPv4 $TFILE | /usr/bin/wc -l`"
 echo "ipv6.value `grep IPv6 $TFILE | /usr/bin/wc -l`"
-echo "sock.value `grep sock $TFILE | /usr/bin/wc -l`"
-echo "db.value `grep -v -e sock -e IPv $TFILE | /usr/bin/wc -l`"
+echo "sock.value `grep -e sock -e SOCK $TFILE | /usr/bin/wc -l`"
+echo "db.value `grep -v -e sock -e SOCK -e IPv $TFILE | /usr/bin/wc -l`"
 
 rm $TFILE
