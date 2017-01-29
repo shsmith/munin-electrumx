@@ -58,7 +58,7 @@ These plugins are working with the following software versions:
 
 | Operating system:    Ubuntu 16.04
 | Munin-Node:          2.0.25
-| ElectrumX:           0.10.1
+| ElectrumX:           0.10.14
 | Bitcoin Core:        0.13.2
 
 
@@ -66,7 +66,7 @@ Live Example
 ------------
 
 You can see these plugins in action here:
-    http://vps.hsmiths.com:49001/munin/localdomain/localhost.localdomain/
+    http://vps.hsmiths.com:49001/munin/hsmiths.com/vps.hsmiths.com/
 
 
 =======================================================
