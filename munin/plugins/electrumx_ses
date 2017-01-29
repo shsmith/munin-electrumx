@@ -17,7 +17,7 @@ Uses the command "electrumx_rpc.py"
 
 =head1 AUTHOR
 
-hsmiths
+shsmith
 
 =head1 LICENSE
 
@@ -73,7 +73,7 @@ fi
 #    "txs_sent": 1
 #}
 
-TFILE=/tmp/munin-electrumx-ses
+TFILE=/tmp/munin-electrumx-ses-$$
 /usr/local/bin/electrumx_rpc.py getinfo > $TFILE
 
 echo "sessions.value `grep sessions $TFILE | grep -o '[0-9]*'`"

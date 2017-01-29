@@ -82,7 +82,7 @@ fi
 #    "txs_sent": 1
 #}
 
-TFILE=/tmp/munin-electrumx-err
+TFILE=/tmp/munin-electrumx-err-$$
 /usr/local/bin/electrumx_rpc.py getinfo > $TFILE
 
 echo "errors.value `grep errors $TFILE | grep -o '[0-9]*'`"

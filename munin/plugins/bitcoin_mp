@@ -17,7 +17,7 @@ Uses the command "bitcoin-cli"
 
 =head1 AUTHOR
 
-hsmiths
+shsmith
 
 =head1 LICENSE
 
@@ -33,6 +33,11 @@ GPLv2
 . $MUNIN_LIBDIR/plugins/plugin.sh
 
 if [ "$1" = "autoconf" ]; then
+	pid=`pidof bitcoind`
+	if [ "$pid" = "" ]; then
+		echo "no (bitcoind not running locally)"
+		exit 0
+	fi
 	if ( bitcoin-cli -datadir=/home/shsmith/.bitcoin getinfo >/dev/null 2>&1 ); then
 		echo yes
 		exit 0
@@ -67,7 +72,7 @@ fi
 #  "mempoolminfee": 0.00000000
 #}
 
-TFILE=/tmp/munin-bitcoin-mp
+TFILE=/tmp/munin-bitcoin-mp-$$
 /usr/bin/bitcoin-cli -datadir=/home/shsmith/.bitcoin getmempoolinfo > $TFILE
 
 echo "size.value `grep size $TFILE | grep -o '[0-9]*'`"

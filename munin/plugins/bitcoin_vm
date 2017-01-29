@@ -17,7 +17,7 @@ Uses the command "bitcoin-cli"
 
 =head1 AUTHOR
 
-hsmiths
+shsmith
 
 =head1 LICENSE
 
@@ -33,6 +33,12 @@ GPLv2
 . $MUNIN_LIBDIR/plugins/plugin.sh
 
 if [ "$1" = "autoconf" ]; then
+	pid=`pidof bitcoind`
+	if [ "$pid" = "" ]; then
+		echo "no (bitcoind not running locally)"
+		exit 0
+	fi
+
 	if ( bitcoin-cli -datadir=/home/shsmith/.bitcoin getinfo >/dev/null 2>&1 ); then
 		echo yes
 		exit 0
@@ -51,14 +57,14 @@ if [ "$1" = "config" ]; then
 	echo 'graph_title bitcoind process memory'
 	echo 'graph_args --base 1000 -l 0'
 	echo 'graph_vlabel value'
-    echo 'graph_scale no'
+	echo 'graph_scale no'
 	echo 'graph_category bitcoind'
-    echo 'vmsize.label VmSize'
-    echo 'vmsize.type GAUGE'
-    echo 'vmrss.label VmRss'
-    echo 'vmrss.type GAUGE'
-    echo 'vmswap.label VmSwap'
-    echo 'vmswap.type GAUGE'
+	echo 'vmsize.label VmSize'
+	echo 'vmsize.type GAUGE'
+	echo 'vmrss.label VmRss'
+	echo 'vmrss.type GAUGE'
+	echo 'vmswap.label VmSwap'
+	echo 'vmswap.type GAUGE'
 	exit 0
 fi
 

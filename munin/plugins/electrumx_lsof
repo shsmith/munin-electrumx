@@ -91,7 +91,7 @@ fi
 #    "txs_sent": 1
 #}
 
-TFILE=/tmp/munin-electrumx-lsof
+TFILE=/tmp/munin-electrumx-lsof-$$
 /usr/local/bin/electrumx_rpc.py getinfo > $TFILE
 
 pid=`grep pid $TFILE | grep -o '[0-9]*'`
