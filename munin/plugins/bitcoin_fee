@@ -9,7 +9,7 @@ bitcoin_fee - Plugin to monitor bicoin daemon.
 
 =head1 CONFIGURATION
 
-Edit the -datadir parameter to specify the location of your bitcoin data directory.
+Edit the BITCOIN_DATADIR setting to specify the location of your bitcoin data directory.
 
 =head1 NOTES
 
@@ -30,15 +30,12 @@ GPLv2
 
 =cut
 
+BITCOIN_DATADIR=/home/shsmith/.bitcoin
+
 . $MUNIN_LIBDIR/plugins/plugin.sh
 
 if [ "$1" = "autoconf" ]; then
-	pid=`pidof bitcoind`
-	if [ "$pid" = "" ]; then
-		echo "no (bitcoind not running locally)"
-		exit 0
-	fi
-	if ( bitcoin-cli -datadir=/home/shsmith/.bitcoin getinfo >/dev/null 2>&1 ); then
+	if ( bitcoin-cli -datadir=$BITCOIN_DATADIR getinfo >/dev/null 2>&1 ); then
 		echo yes
 		exit 0
 	else
@@ -59,13 +56,31 @@ if [ "$1" = "config" ]; then
 	echo 'graph_category bitcoind'
 	echo 'paytxfee.label paytxfee'
 	echo 'paytxfee.type GAUGE'
-	echo 'paytxfee.max 1'
 	echo 'relayfee.label relayfee'
 	echo 'relayfee.type GAUGE'
-	echo 'relayfee.max 1'
 	echo 'mempoolminfee.label mempoolminfee'
 	echo 'mempoolminfee.type GAUGE'
-	echo 'mempoolminfee.max 1'
+	echo 'estimatesmartfee1.label estimatesmartfee 1 block'
+	echo 'estimatesmartfee1.type GAUGE'
+	echo 'estimatesmartfee1.min 0'
+	echo 'estimatesmartfee2.label estimatesmartfee 2 blocks'
+	echo 'estimatesmartfee2.type GAUGE'
+	echo 'estimatesmartfee2.min 0'
+	echo 'estimatesmartfee3.label estimatesmartfee 3 blocks'
+	echo 'estimatesmartfee3.type GAUGE'
+	echo 'estimatesmartfee3.min 0'
+	echo 'estimatesmartfee4.label estimatesmartfee 4 blocks'
+	echo 'estimatesmartfee4.type GAUGE'
+	echo 'estimatesmartfee4.min 0'
+	echo 'estimatesmartfee5.label estimatesmartfee 5 blocks'
+	echo 'estimatesmartfee5.type GAUGE'
+	echo 'estimatesmartfee5.min 0'
+	echo 'estimatesmartfee10.label estimatesmartfee 10 blocks'
+	echo 'estimatesmartfee10.type GAUGE'
+	echo 'estimatesmartfee10.min 0'
+	echo 'estimatesmartfee20.label estimatesmartfee 20 blocks'
+	echo 'estimatesmartfee20.type GAUGE'
+	echo 'estimatesmartfee20.min 0'
 	exit 0
 fi
 
@@ -91,15 +106,39 @@ fi
 #  "maxmempool": 300000000,
 #  "mempoolminfee": 0.00000000
 #}
+#bitcoin-cli estimatesmartfee 1
+#{
+#  "feerate": 0.00122190,
+#  "blocks": 2
+#}
 
 TFILE=/tmp/munin-bitcoin-fee-$$
-/usr/bin/bitcoin-cli -datadir=/home/shsmith/.bitcoin getinfo > $TFILE
-
+/usr/bin/bitcoin-cli -datadir=$BITCOIN_DATADIR getinfo > $TFILE
 echo "paytxfee.value `grep paytxfee $TFILE | grep -o '[0-9\.]*'`"
 echo "relayfee.value `grep relayfee $TFILE | grep -o '[0-9\.]*'`"
 
-/usr/bin/bitcoin-cli -datadir=/home/shsmith/.bitcoin getmempoolinfo > $TFILE
-
+/usr/bin/bitcoin-cli -datadir=$BITCOIN_DATADIR getmempoolinfo > $TFILE
 echo "mempoolminfee.value `grep mempoolminfee $TFILE | grep -o '[0-9\.]*'`"
+
+/usr/bin/bitcoin-cli -datadir=$BITCOIN_DATADIR estimatesmartfee 1 > $TFILE
+echo "estimatesmartfee1.value `grep feerate $TFILE | grep -o '[0-9\.]*'`"
+
+/usr/bin/bitcoin-cli -datadir=$BITCOIN_DATADIR estimatesmartfee 2 > $TFILE
+echo "estimatesmartfee2.value `grep feerate $TFILE | grep -o '[0-9\.]*'`"
+
+/usr/bin/bitcoin-cli -datadir=$BITCOIN_DATADIR estimatesmartfee 3 > $TFILE
+echo "estimatesmartfee3.value `grep feerate $TFILE | grep -o '[0-9\.]*'`"
+
+/usr/bin/bitcoin-cli -datadir=$BITCOIN_DATADIR estimatesmartfee 4 > $TFILE
+echo "estimatesmartfee4.value `grep feerate $TFILE | grep -o '[0-9\.]*'`"
+
+/usr/bin/bitcoin-cli -datadir=$BITCOIN_DATADIR estimatesmartfee 5 > $TFILE
+echo "estimatesmartfee5.value `grep feerate $TFILE | grep -o '[0-9\.]*'`"
+
+/usr/bin/bitcoin-cli -datadir=$BITCOIN_DATADIR estimatesmartfee 10 > $TFILE
+echo "estimatesmartfee10.value `grep feerate $TFILE | grep -o '[0-9\.]*'`"
+
+/usr/bin/bitcoin-cli -datadir=$BITCOIN_DATADIR estimatesmartfee 20 > $TFILE
+echo "estimatesmartfee20.value `grep feerate $TFILE | grep -o '[0-9\.]*'`"
 
 rm $TFILE

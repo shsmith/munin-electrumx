@@ -9,7 +9,7 @@ bitcoin_mp - Plugin to monitor bicoin daemon.
 
 =head1 CONFIGURATION
 
-Edit the -datadir parameter to specify the location of your bitcoin data directory.
+Edit the BITCOIN_DATADIR setting to specify the location of your bitcoin data directory.
 
 =head1 NOTES
 
@@ -30,15 +30,12 @@ GPLv2
 
 =cut
 
+BITCOIN_DATADIR=/home/shsmith/.bitcoin
+
 . $MUNIN_LIBDIR/plugins/plugin.sh
 
 if [ "$1" = "autoconf" ]; then
-	pid=`pidof bitcoind`
-	if [ "$pid" = "" ]; then
-		echo "no (bitcoind not running locally)"
-		exit 0
-	fi
-	if ( bitcoin-cli -datadir=/home/shsmith/.bitcoin getinfo >/dev/null 2>&1 ); then
+	if ( bitcoin-cli -datadir=$BITCOIN_DATADIR getinfo >/dev/null 2>&1 ); then
 		echo yes
 		exit 0
 	else
@@ -73,7 +70,7 @@ fi
 #}
 
 TFILE=/tmp/munin-bitcoin-mp-$$
-/usr/bin/bitcoin-cli -datadir=/home/shsmith/.bitcoin getmempoolinfo > $TFILE
+/usr/bin/bitcoin-cli -datadir=$BITCOIN_DATADIR getmempoolinfo > $TFILE
 
 echo "size.value `grep size $TFILE | grep -o '[0-9]*'`"
 

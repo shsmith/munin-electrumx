@@ -9,7 +9,7 @@ bitcoin_con - Plugin to monitor bicoin daemon.
 
 =head1 CONFIGURATION
 
-Edit the -datadir parameter to specify the location of your bitcoin data directory.
+Edit the BITCOIN_DATADIR setting to specify the location of your bitcoin data directory.
 
 =head1 NOTES
 
@@ -30,10 +30,12 @@ GPLv2
 
 =cut
 
+BITCOIN_DATADIR=/home/shsmith/.bitcoin
+
 . $MUNIN_LIBDIR/plugins/plugin.sh
 
 if [ "$1" = "autoconf" ]; then
-	if ( bitcoin-cli -datadir=/home/shsmith/.bitcoin getinfo >/dev/null 2>&1 ); then
+	if ( bitcoin-cli -datadir=$BITCOIN_DATADIR getinfo >/dev/null 2>&1 ); then
 		echo yes
 		exit 0
 	else
@@ -74,7 +76,7 @@ fi
 #}
 
 TFILE=/tmp/munin-bitcoin-con-$$
-/usr/bin/bitcoin-cli -datadir=/home/shsmith/.bitcoin getinfo > $TFILE
+/usr/bin/bitcoin-cli -datadir=$BITCOIN_DATADIR getinfo > $TFILE
 
 echo "connections.value `grep connections $TFILE | grep -o '[0-9]*'`"
 
