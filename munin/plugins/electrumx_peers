@@ -73,9 +73,22 @@ fi
 #    "txs_sent": 1
 #}
 
+#alternate peers
+#    "peers": {
+#        "current": 55,
+#        "never": 21,
+#        "stale": 0,
+#        "total": 76
+#    },
+
 TFILE=/tmp/munin-electrumx-peers-$$
 /usr/local/bin/electrumx_rpc.py getinfo > $TFILE
 
-echo "peers.value `grep peers $TFILE | grep -o '[0-9]*'`"
+PEERS=`grep peers $TFILE | grep -o '[0-9]*'`
+if [ "$PEERS" = "" ]; then
+	PEERS=`grep total $TFILE | grep -o '[0-9]*'`
+fi
+
+echo "peers.value $PEERS"
 
 rm $TFILE

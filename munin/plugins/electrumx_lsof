@@ -98,6 +98,12 @@ echo "sessions.value `grep sessions $TFILE | grep -o '[0-9]*'`"
 
 /usr/bin/lsof -p $pid -n > $TFILE
 
+# check for arch linux, which doesn't include network handles by default
+IP=`grep IP $TFILE | /usr/bin/wc -l`
+if [ $IP = "0" ]; then
+	/usr/bin/lsof -p $pid -n -i | grep IP >> $TFILE
+fi
+
 echo "lsof.value `/usr/bin/wc -l < $TFILE`"
 echo "ipv4.value `grep IPv4 $TFILE | /usr/bin/wc -l`"
 echo "ipv6.value `grep IPv6 $TFILE | /usr/bin/wc -l`"
