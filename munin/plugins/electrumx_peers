@@ -52,9 +52,14 @@ if [ "$1" = "config" ]; then
 	echo 'graph_args --base 1000 -l 0'
 	echo 'graph_vlabel value'
 	echo 'graph_category ElectrumX'
-	echo 'peers.label Peers'
+	echo 'current.label Current'
+	echo 'current.type GAUGE'
+	echo 'never.label Never'
+	echo 'never.type GAUGE'
+	echo 'stale.label Stale'
+	echo 'stale.type GAUGE'
+	echo 'peers.label Total'
 	echo 'peers.type GAUGE'
-	echo 'peers.max 100'
 	exit 0
 fi
 
@@ -84,11 +89,14 @@ fi
 TFILE=/tmp/munin-electrumx-peers-$$
 /usr/local/bin/electrumx_rpc.py getinfo > $TFILE
 
+echo "current.value `grep current $TFILE | grep -o '[0-9]*'`"
+echo "never.value `grep never $TFILE | grep -o '[0-9]*'`"
+echo "stale.value `grep stale $TFILE | grep -o '[0-9]*'`"
+
 PEERS=`grep peers $TFILE | grep -o '[0-9]*'`
 if [ "$PEERS" = "" ]; then
 	PEERS=`grep total $TFILE | grep -o '[0-9]*'`
 fi
-
 echo "peers.value $PEERS"
 
 rm $TFILE
