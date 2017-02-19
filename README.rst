@@ -58,7 +58,7 @@ These plugins are working with the following software versions:
 
 | Operating system:    Ubuntu 16.04
 | Munin-Node:          2.0.25
-| ElectrumX:           0.10.14
+| ElectrumX:           0.11.4
 | Bitcoin Core:        0.13.2
 
 

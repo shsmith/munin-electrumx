@@ -52,7 +52,9 @@ if [ "$1" = "config" ]; then
 	echo 'graph_args --base 1000 -l 0'
 	echo 'graph_vlabel value'
 	echo 'graph_category ElectrumX'
-	echo 'current.label Current'
+	echo 'bad.label Bad'
+	echo 'bad.type GAUGE'
+	echo 'current.label Good'
 	echo 'current.type GAUGE'
 	echo 'never.label Never'
 	echo 'never.type GAUGE'
@@ -65,38 +67,35 @@ fi
 
 #{
 #    "closing": 0,
-#    "daemon_height": 443912,
-#    "db_height": 443912,
+#    "daemon": "sampc8:8332/",
+#    "daemon_height": 453777,
+#    "db_height": 453777,
 #    "errors": 0,
 #    "groups": 1,
 #    "logged": 0,
-#    "peers": 53,
-#    "pid": 23142,
-#    "requests": 0,
-#    "sessions": 50,
-#    "subs": 974,
-#    "txs_sent": 1
-#}
-
-#alternate peers
+#    "paused": 0,
 #    "peers": {
-#        "current": 55,
-#        "never": 21,
+#        "bad": 11,
+#        "good": 54,
+#        "never": 11,
 #        "stale": 0,
 #        "total": 76
 #    },
+#    "pid": 62669,
+#    "requests": 0,
+#    "sessions": 47,
+#    "subs": 5840,
+#    "txs_sent": 1,
+#    "uptime": "02m 58s"
+#}
 
 TFILE=/tmp/munin-electrumx-peers-$$
 /usr/local/bin/electrumx_rpc.py getinfo > $TFILE
 
-echo "current.value `grep current $TFILE | grep -o '[0-9]*'`"
+echo "bad.value `grep bad $TFILE | grep -o '[0-9]*'`"
+echo "current.value `grep good $TFILE | grep -o '[0-9]*'`"
 echo "never.value `grep never $TFILE | grep -o '[0-9]*'`"
 echo "stale.value `grep stale $TFILE | grep -o '[0-9]*'`"
-
-PEERS=`grep peers $TFILE | grep -o '[0-9]*'`
-if [ "$PEERS" = "" ]; then
-	PEERS=`grep total $TFILE | grep -o '[0-9]*'`
-fi
-echo "peers.value $PEERS"
+echo "peers.value `grep total $TFILE | grep -o '[0-9]*'`"
 
 rm $TFILE
