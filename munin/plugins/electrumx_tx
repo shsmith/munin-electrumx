@@ -53,7 +53,7 @@ if [ "$1" = "config" ]; then
 	echo 'graph_vlabel value'
 	echo 'graph_category ElectrumX'
 	echo 'txs_sent.label txs_sent'
-	echo 'txs_sent.type GAUGE'
+	echo 'txs_sent.type DERIVE'
 	echo 'txs_sent.max 1000000'
 	exit 0
 fi
