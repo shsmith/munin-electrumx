@@ -1,0 +1,91 @@
+#!/bin/sh
+# -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+bitcoin_mp - Plugin to monitor bicoin daemon.
+
+=head1 CONFIGURATION
+
+Edit the BITCOIN_DATADIR setting to specify the location of your bitcoin data directory.
+
+=head1 NOTES
+
+Uses the command "bitcoin-cli"
+
+=head1 AUTHOR
+
+shsmith
+
+=head1 LICENSE
+
+GPLv2
+
+=head1 MAGIC MARKERS
+
+ #%# family=auto
+ #%# capabilities=autoconf
+
+=cut
+
+BITCOIN_DATADIR=/home/shsmith/.bitcoin
+
+if [ -e $MUNIN_LIBDIR/plugins/plugin.sh ]; then
+        . $MUNIN_LIBDIR/plugins/plugin.sh
+fi
+
+if [ "$1" = "autoconf" ]; then
+	if ( bitcoin-cli -datadir=$BITCOIN_DATADIR getinfo >/dev/null 2>&1 ); then
+		echo yes
+		exit 0
+	else
+		if [ $? -eq 127 ]; then
+			echo "no (could not run \"bitcoin-cli\")"
+			exit 0
+		else
+			echo no
+			exit 0
+		fi
+	fi
+fi
+
+if [ "$1" = "config" ]; then
+	echo 'graph_title bitcoind bandwidth'
+	echo 'graph_args --base 1000 -l 0'
+	echo 'graph_vlabel bytes per ${graph_period} recv (-) / sent (+)'
+	echo 'graph_category bitcoind'
+	echo 'bytesrecv.label bytes received'
+	echo 'bytesrecv.type DERIVE'
+	echo 'bytesrecv.min 0'
+	echo 'bytesrecv.graph no'
+	echo 'bytessent.label bytes'
+	echo 'bytessent.type DERIVE'
+	echo 'bytessent.negative bytesrecv'
+	echo 'bytessent.min 0'
+	exit 0
+fi
+
+#bitcoin-cli getnettotals
+#{
+#  "totalbytesrecv": 597993307,
+#  "totalbytessent": 2796347072,
+#  "timemillis": 1488735884545,
+#  "uploadtarget": {
+#    "timeframe": 86400,
+#    "target": 524288000,
+#    "target_reached": true,
+#    "serve_historical_blocks": false,
+#    "bytes_left_in_cycle": 0,
+#    "time_left_in_cycle": 4002
+#  }
+#}
+
+TFILE=/tmp/munin-bitcoin-bw-$$
+/usr/bin/bitcoin-cli -datadir=$BITCOIN_DATADIR getnettotals > $TFILE
+
+echo "bytesrecv.value `grep totalbytesrecv $TFILE | grep -o '[0-9]*'`"
+echo "bytessent.value `grep totalbytessent $TFILE | grep -o '[0-9]*'`"
+
+rm $TFILE
