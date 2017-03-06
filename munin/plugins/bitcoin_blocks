@@ -37,7 +37,7 @@ if [ -e $MUNIN_LIBDIR/plugins/plugin.sh ]; then
 fi
 
 if [ "$1" = "autoconf" ]; then
-	if ( bitcoin-cli -datadir=$BITCOIN_DATADIR getinfo >/dev/null 2>&1 ); then
+	if ( bitcoin-cli -datadir=$BITCOIN_DATADIR getdifficulty >/dev/null 2>&1 ); then
 		echo yes
 		exit 0
 	else
@@ -63,23 +63,8 @@ if [ "$1" = "config" ]; then
 	exit 0
 fi
 
-#bitcoin-cli getinfo
-#{
-#  "version": 130100,
-#  "protocolversion": 70014,
-#  "blocks": 445876,
-#  "timeoffset": 0,
-#  "connections": 27,
-#  "proxy": "",
-#  "difficulty": 317688400354.0338,
-#  "testnet": false,
-#  "paytxfee": 0.00000000,
-#  "relayfee": 0.00001000,
-#  "errors": ""
-#}
-
-TFILE=/tmp/munin-bitcoin-diff-$$
-/usr/bin/bitcoin-cli -datadir=$BITCOIN_DATADIR getinfo > $TFILE
+TFILE=/tmp/munin-bitcoin-blocks-$$
+/usr/bin/bitcoin-cli -datadir=$BITCOIN_DATADIR getblockchaininfo > $TFILE
 
 echo "blocks.value `grep blocks $TFILE | grep -o '[0-9\.]*'`"
 

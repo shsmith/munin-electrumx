@@ -37,7 +37,7 @@ if [ -e $MUNIN_LIBDIR/plugins/plugin.sh ]; then
 fi
 
 if [ "$1" = "autoconf" ]; then
-	if ( bitcoin-cli -datadir=$BITCOIN_DATADIR getinfo >/dev/null 2>&1 ); then
+	if ( bitcoin-cli -datadir=$BITCOIN_DATADIR betdifficulty >/dev/null 2>&1 ); then
 		echo yes
 		exit 0
 	else
@@ -66,21 +66,6 @@ if [ "$1" = "config" ]; then
 	echo 'bytessent.min 0'
 	exit 0
 fi
-
-#bitcoin-cli getnettotals
-#{
-#  "totalbytesrecv": 597993307,
-#  "totalbytessent": 2796347072,
-#  "timemillis": 1488735884545,
-#  "uploadtarget": {
-#    "timeframe": 86400,
-#    "target": 524288000,
-#    "target_reached": true,
-#    "serve_historical_blocks": false,
-#    "bytes_left_in_cycle": 0,
-#    "time_left_in_cycle": 4002
-#  }
-#}
 
 TFILE=/tmp/munin-bitcoin-bw-$$
 /usr/bin/bitcoin-cli -datadir=$BITCOIN_DATADIR getnettotals > $TFILE

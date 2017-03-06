@@ -42,7 +42,7 @@ if [ "$1" = "autoconf" ]; then
 		exit 0
 	fi
 
-	if ( bitcoin-cli -datadir=$BITCOIN_DATADIR getinfo >/dev/null 2>&1 ); then
+	if ( bitcoin-cli -datadir=$BITCOIN_DATADIR getdifficulty >/dev/null 2>&1 ); then
 		echo yes
 		exit 0
 	else

@@ -35,7 +35,7 @@ BITCOIN_DATADIR=/home/shsmith/.bitcoin
 . $MUNIN_LIBDIR/plugins/plugin.sh
 
 if [ "$1" = "autoconf" ]; then
-	if ( bitcoin-cli -datadir=$BITCOIN_DATADIR getinfo >/dev/null 2>&1 ); then
+	if ( bitcoin-cli -datadir=$BITCOIN_DATADIR getdifficulty >/dev/null 2>&1 ); then
 		echo yes
 		exit 0
 	else
