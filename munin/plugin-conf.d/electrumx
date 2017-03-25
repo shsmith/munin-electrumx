@@ -1,0 +1,7 @@
+
+[electrumx_lsof]
+user root
+env.RPC_PORT 8000
+
+[electrumx_*]
+env.RPC_PORT 8000

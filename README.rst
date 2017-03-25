@@ -24,7 +24,10 @@ For Ubuntu systems the commands are:
 Once you have munin up and running, add the following files:
 
 | /etc/munin/plugins/
+|    bitcoin_blocks
+|    bitcoin_bw  
 |    bitcoin_conn
+|    bitcoin_diff
 |    bitcoin_fee
 |    bitcoin_mp
 |    bitcoin_mp2
@@ -37,17 +40,17 @@ Once you have munin up and running, add the following files:
 |    electrumx_sub
 |    electrumx_tx
 
-You will need to edit each of the bitcoin_* plugin files to specify your 
-actual bitcoin data directory.    
-
-The bitcoin_vm and electrumx_lsof plugins both require additional 
-permissions in order to inspect the running processes. These permissions 
-are granted by the corresponding files added to your plugin-conf.d folder.
+Some of these plugins require additional permissions in order to inspect the 
+running processes. These permissions are granted by the following files added 
+to your plugin-conf.d folder.
 
 | /etc/munin/plugin-conf.d/
-|    bitcoin_vm
-|    electrumx_lsof
-    
+|    bitcoin
+|    electrumx
+
+You will need to edit the plugin-conf.d/bitcoin and adjust the BITCOIN_DATADIR
+environment to specify where to find your bitcoin data directory.
+
 After configuring the plugins, restart the munin-node service.
 
 
@@ -58,8 +61,8 @@ These plugins are working with the following software versions:
 
 | Operating system:    Ubuntu 16.04
 | Munin-Node:          2.0.25
-| ElectrumX:           0.11.4
-| Bitcoin Core:        0.13.2
+| ElectrumX:           1.0.1
+| Bitcoin Core:        0.14.0
 
 
 Live Example

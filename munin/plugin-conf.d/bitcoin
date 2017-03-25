@@ -1,0 +1,7 @@
+
+[bitcoin_vm]
+user root
+env.BITCOIN_DATADIR /home/shsmith/.bitcoin
+
+[bitcoin_*]
+env.BITCOIN_DATADIR /home/shsmith/.bitcoin
