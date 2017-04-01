@@ -39,6 +39,7 @@ Once you have munin up and running, add the following files:
 |    electrumx_ses
 |    electrumx_sub
 |    electrumx_tx
+|    electrumx_users
 
 Some of these plugins require additional permissions in order to inspect the 
 running processes. These permissions are granted by the following files added 
