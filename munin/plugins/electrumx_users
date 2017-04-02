@@ -69,7 +69,7 @@ TFILE=/tmp/munin-electrumx-users-$$
 # each session is connected to 8 other peers
 # so estimated total users is mySessions * goodPeers / connectionsPerUser
 mySessions=`grep sessions $TFILE | grep -o '[0-9]*'`
-goodPeers=`grep total $TFILE | grep -o '[0-9]*'`
+goodPeers=`grep good $TFILE | grep -o '[0-9]*'`
 totalUsers=`expr $mySessions "*" $goodPeers / 8`
 
 echo "sessions.value $mySessions"
