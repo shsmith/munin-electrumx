@@ -36,7 +36,7 @@ if [ "$1" = "autoconf" ]; then
 fi
 
 if [ "$1" = "config" ]; then
-	echo 'graph_title bitcoin ticker'
+	echo 'graph_title bitcoin tickers'
 	echo 'graph_args --base 1000'
 	echo 'graph_scale no'
 	echo 'graph_vlabel USD'
@@ -44,6 +44,7 @@ if [ "$1" = "config" ]; then
 	echo 'bitcoinaverage.label bitcoinaverage.com'
 	echo 'blockchain.label blockchain.info'
 	echo 'btce.label btc-e.com'
+	echo 'coinbase.label coinbase.com (gdax)'
 	echo 'coindesk.label coindesk.com'
 	echo 'winkdex.label winkdex.com'
 	exit 0
@@ -58,7 +59,10 @@ echo blockchain.value $blockchain
 btce=`curl -L -s 'btc-e.com/api/3/ticker/btc_usd' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["btc_usd"]["last"])'`
 echo btce.value $btce
 
-coindesk=`curl -s 'api.coindesk.com/v1/bpi/currentprice.json' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["bpi"]["USD"]["rate_float"])'`
+coinbase=`curl -L -s 'api.gdax.com/products/BTC-USD/ticker' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["price"])'`
+echo coinbase.value $coinbase
+
+coindesk=`curl -L -s 'api.coindesk.com/v1/bpi/currentprice.json' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["bpi"]["USD"]["rate_float"])'`
 echo coindesk.value $coindesk
 
 winkdex=`curl -L -s 'winkdex.com/api/v0/price' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(float(j["price"])/100)'`
