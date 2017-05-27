@@ -1,0 +1,65 @@
+#!/bin/sh
+# -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+
+=head1 CONFIGURATION
+
+=head1 NOTES
+
+=head1 AUTHOR
+
+shsmith
+
+=head1 LICENSE
+
+GPLv2
+
+=head1 MAGIC MARKERS
+
+ #%# family=auto
+ #%# capabilities=autoconf
+
+=cut
+
+if [ -e $MUNIN_LIBDIR/plugins/plugin.sh ]; then
+	. $MUNIN_LIBDIR/plugins/plugin.sh
+fi
+
+if [ "$1" = "autoconf" ]; then
+	echo yes
+	exit 0
+fi
+
+if [ "$1" = "config" ]; then
+	echo 'graph_title bitcoin ticker'
+	echo 'graph_args --base 1000'
+	echo 'graph_scale no'
+	echo 'graph_vlabel USD'
+	echo 'graph_category bitcoind'
+	echo 'bitcoinaverage.label bitcoinaverage.com'
+	echo 'blockchain.label blockchain.info'
+	echo 'btce.label btc-e.com'
+	echo 'coindesk.label coindesk.com'
+	echo 'winkdex.label winkdex.com'
+	exit 0
+fi
+
+bitcoinaverage=`curl -L -s 'api.bitcoinaverage.com/ticker/global/USD' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["last"])'`
+echo bitcoinaverage.value $bitcoinaverage
+
+blockchain=`curl -s 'blockchain.info/ticker' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["USD"]["last"])'`
+echo blockchain.value $blockchain
+
+btce=`curl -L -s 'btc-e.com/api/3/ticker/btc_usd' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["btc_usd"]["last"])'`
+echo btce.value $btce
+
+coindesk=`curl -s 'api.coindesk.com/v1/bpi/currentprice.json' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["bpi"]["USD"]["rate_float"])'`
+echo coindesk.value $coindesk
+
+winkdex=`curl -L -s 'winkdex.com/api/v0/price' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(float(j["price"])/100)'`
+echo winkdex.value $winkdex
+
