@@ -5,6 +5,7 @@
 
 =head1 NAME
 
+bitcoin_ticker - Plugin to monitor bicoin tickers.
 
 =head1 CONFIGURATION
 
