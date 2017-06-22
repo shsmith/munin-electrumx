@@ -46,11 +46,12 @@ if [ "$1" = "config" ]; then
 	echo 'btce.label btc-e.com'
 	echo 'coinbase.label coinbase.com (gdax)'
 	echo 'coindesk.label coindesk.com'
+	echo 'gemini.label gemini.com'
 	echo 'winkdex.label winkdex.com'
 	exit 0
 fi
 
-bitcoinaverage=`curl -L -s 'api.bitcoinaverage.com/ticker/global/USD' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["last"])'`
+bitcoinaverage=`curl -L -s 'apiv2.bitcoinaverage.com/indices/global/ticker/BTCUSD' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["last"])'`
 echo bitcoinaverage.value $bitcoinaverage
 
 blockchain=`curl -s 'blockchain.info/ticker' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["USD"]["last"])'`
@@ -64,6 +65,9 @@ echo coinbase.value $coinbase
 
 coindesk=`curl -L -s 'api.coindesk.com/v1/bpi/currentprice.json' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["bpi"]["USD"]["rate_float"])'`
 echo coindesk.value $coindesk
+
+gemini=`curl -L -s 'https://api.gemini.com/v1/pubticker/BTCUSD' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["last"])'`
+echo gemini.value $gemini
 
 winkdex=`curl -L -s 'winkdex.com/api/v0/price' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(float(j["price"])/100)'`
 echo winkdex.value $winkdex
