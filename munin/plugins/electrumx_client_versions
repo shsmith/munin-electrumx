@@ -56,9 +56,9 @@ if [ "$1" = "config" ]; then
 	echo 'graph_args --base 1000 -l 0'
 	echo 'graph_vlabel sessions'
 	echo 'graph_category ElectrumX'
-	${electrumx_rpc} sessions | grep -v ID | awk '{print $3}' | sort | uniq -c | tr '.' '-' | awk '{v=$2; gsub("-",".",$2); print "version_" v ".label " $2 "\n" "version_" v ".type GAUGE"}'
+	${electrumx_rpc} sessions | grep -v ID | awk '{print $3}' | sort -V | uniq -c | tr '.' '-' | awk '{v=$2; gsub("-",".",$2); print "version_" v ".label " $2 "\n" "version_" v ".type GAUGE"}'
 	exit 0
 fi
 
-${electrumx_rpc} sessions | grep -v ID | awk '{print $3}' | sort | uniq -c | tr '.' '-' | awk '{print "version_" $2 ".value " $1}'
+${electrumx_rpc} sessions | grep -v ID | awk '{print $3}' | sort -V | uniq -c | tr '.' '-' | awk '{print "version_" $2 ".value " $1}'
 
