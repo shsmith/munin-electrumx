@@ -43,10 +43,10 @@ known_versions() {
 	if [ -e ${vfile}.known ]; then
 		cat ${vfile}.known >> ${vfile}.new
 	fi
-	sort -V < ${vfile}.new | uniq > ${vfile}.known
+	sort -V -r < ${vfile}.new | uniq > ${vfile}.known
 
 	# return count+1 and version
-	sort -V ${vfile}.new | grep -v -e Client -e RPC | uniq -c | sort -n -r
+	sort -V -r < ${vfile}.new | grep -v -e Client -e RPC | uniq -c | head -n 50
 }
 
 if [ -e $MUNIN_LIBDIR/plugins/plugin.sh ]; then
