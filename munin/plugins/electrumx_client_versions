@@ -37,7 +37,7 @@ known_versions() {
 	vfile=/tmp/electrumx_client_versions
 
 	# get new version items
-	${electrumx_rpc} sessions | grep -v ID | tr '.' '-' | awk '{print $3}' | grep -v ID > ${vfile}.new
+	${electrumx_rpc} sessions | tr '.' '-' | awk '{print $3}' > ${vfile}.new
 
 	# combine with previously known versions
 	if [ -e ${vfile}.known ]; then
@@ -46,7 +46,7 @@ known_versions() {
 	sort -V < ${vfile}.new | uniq > ${vfile}.known
 
 	# return count+1 and version
-	sort -V ${vfile}.new | uniq -c
+	sort -V ${vfile}.new | grep -v -e Client -e RPC | uniq -c | sort -n -r
 }
 
 if [ -e $MUNIN_LIBDIR/plugins/plugin.sh ]; then
