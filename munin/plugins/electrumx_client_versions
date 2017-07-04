@@ -46,6 +46,7 @@ known_versions() {
 	sort -V -r < ${vfile}.new | uniq > ${vfile}.known
 
 	# return count+1 and version
+	# sorted by reverse version number and limit to the highest 50 versions
 	sort -V -r < ${vfile}.new | grep -v -e Client -e RPC | uniq -c | head -n 50
 }
 
