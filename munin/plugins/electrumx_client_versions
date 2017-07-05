@@ -36,23 +36,19 @@ electrumx_rpc=/usr/local/bin/electrumx_rpc.py
 known_versions() {
 	vfile=/tmp/electrumx_client_versions
 
-	# get new version items
-	${electrumx_rpc} sessions | tr '.' '-' | awk '{print $3}' > ${vfile}.new
+	# get new version items, sanitize as valid munin identifiers
+	${electrumx_rpc} sessions | awk '{print $3}' | sed 's/[^a-zA-Z0-9_]/-/g' > ${vfile}.new
 
 	# combine with previously known versions
 	if [ -e ${vfile}.known ]; then
 		cat ${vfile}.known >> ${vfile}.new
 	fi
-	sort -V -r < ${vfile}.new | uniq > ${vfile}.known
+	sort < ${vfile}.new | uniq > ${vfile}.known
 
 	# return count+1 and version
-	# sorted by reverse version number and limit to the highest 50 versions
-	sort -V -r < ${vfile}.new | grep -v -e Client -e RPC | uniq -c | head -n 50
+	# limit to the most active 100 versions and sorted by reverse version number
+	sort < ${vfile}.new | grep -v -e Client -e RPC | uniq -c | sort -n -r | head -n 100 | sort -V -r -k 2
 }
-
-if [ -e $MUNIN_LIBDIR/plugins/plugin.sh ]; then
-	. $MUNIN_LIBDIR/plugins/plugin.sh
-fi
 
 if [ "$1" = "autoconf" ]; then
 	if ( ${electrumx_rpc} getinfo >/dev/null 2>&1 ); then
@@ -78,5 +74,5 @@ if [ "$1" = "config" ]; then
 	exit 0
 fi
 
-# subtract 1 from each count (allows 0 to be retained in charts)
+# subtract 1 from each count (allows 0 to be retained in historical charts)
 known_versions | awk '{printf "version_%s.value %d\n", $2, $1-1}'
