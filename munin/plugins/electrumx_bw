@@ -1,0 +1,76 @@
+#!/bin/sh
+# -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+electrumx_bw - Plugin to monitor ElectrumX server.
+
+=head1 CONFIGURATION
+
+No configuration
+
+=head1 NOTES
+
+Uses the command "electrumx_rpc.py"
+Uses the command "nethogs"
+
+=head1 AUTHOR
+
+shsmith
+
+=head1 LICENSE
+
+GPLv2
+
+=head1 MAGIC MARKERS
+
+ #%# family=auto
+ #%# capabilities=autoconf
+
+=cut
+
+if [ "$1" = "autoconf" ]; then
+	echo yes
+	exit 0
+fi
+
+if [ "$1" = "config" ]; then
+	echo 'graph_title Electrumx Bandwidth'
+	echo 'graph_args --base 1024 -l 0'
+	echo 'graph_vlabel bytes per ${graph_period} recv (-) / sent (+)'
+	echo 'graph_category ElectrumX'
+	echo "bitcoindrecv.type GAUGE"
+	echo "bitcoindrecv.label br"
+	echo "bitcoindrecv.graph no"
+	echo "bitcoindsent.type GAUGE"
+	echo "bitcoindsent.label bc"
+	echo "bitcoindsent.negative bitcoindrecv"
+	echo "electrumxrecv.type GAUGE"
+	echo "electrumxrecv.label exr"
+	echo "electrumxrecv.graph no"
+	echo "electrumxsent.type GAUGE"
+	echo "electrumxsent.label ex"
+	echo "electrumxsent.negative electrumxrecv"
+	echo "torrecv.type GAUGE"
+	echo "torrecv.label torr"
+	echo "torrecv.graph no"
+	echo "torsent.type GAUGE"
+	echo "torsent.label tor"
+	echo "torsent.negative torrecv"
+	exit 0
+fi
+
+TFILE=/tmp/munin-electrumx-bw-$$
+/usr/local/bin/electrumx_rpc.py getinfo > $TFILE
+pid=`grep pid $TFILE | grep -o '[0-9]*'`
+
+/usr/sbin/nethogs -t -c 1 -d 10 > $TFILE 2> /dev/null
+
+grep /${pid}/ $TFILE | awk '{print "electrumxsent.value " $2*1024; print "electrumxrecv.value " $3*1024}'
+grep bitcoind $TFILE | awk '{print "bitcoindsent.value " $2*1024; print "bitcoindrecv.value " $3*1024}'
+grep tor $TFILE | awk '{print "torsent.value " $2*1024; print "torrecv.value " $3*1024}'
+
+rm $TFILE
+

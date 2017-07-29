@@ -1,0 +1,53 @@
+#!/bin/sh
+# -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+electrumx_io - Plugin to monitor ElectrumX server.
+
+=head1 CONFIGURATION
+
+No configuration
+
+=head1 NOTES
+
+Uses the command "electrumx_rpc.py"
+
+=head1 AUTHOR
+
+shsmith
+
+=head1 LICENSE
+
+GPLv2
+
+=head1 MAGIC MARKERS
+
+ #%# family=auto
+ #%# capabilities=autoconf
+
+=cut
+
+if [ "$1" = "autoconf" ]; then
+	echo yes
+	exit 0
+fi
+
+TFILE=/tmp/munin-electrumx-io-$$
+/usr/local/bin/electrumx_rpc.py getinfo > $TFILE
+pid=`grep pid $TFILE | grep -o '[0-9]*'`
+rm $TFILE
+
+if [ "$1" = "config" ]; then
+	echo 'graph_title ElectrumX I/O'
+	echo 'graph_args --base 1024 -l 0'
+	echo 'graph_vlabel value'
+	echo 'graph_category ElectrumX'
+	< /proc/${pid}/io awk '{gsub(":","",$1); print $1 ".label " $1}'
+	< /proc/${pid}/io awk '{gsub(":","",$1); print $1 ".type COUNTER"}'
+	exit 0
+fi
+
+< /proc/${pid}/io awk '{gsub(":","",$1); print $1 ".value " $2}'

@@ -33,8 +33,10 @@ Once you have munin up and running, add the following files::
     bitcoin_peer_versions
     bitcoin_ticker
     bitcoin_vm
+	electrumx_bw
     electrumx_client_versions
     electrumx_err
+	electrumx_io
     electrumx_lsof
     electrumx_mem
     electrumx_peers
@@ -64,7 +66,7 @@ These plugins are working with the following software versions::
 
  Operating System:   Ubuntu 16.04
  Munin-Node:         2.0.25
- ElectrumX:          1.0.13
+ ElectrumX:          1.0.14
  Bitcoin Core:       0.14.2
 
 
