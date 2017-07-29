@@ -20,6 +20,10 @@ Install munin and apache2.  For Ubuntu systems the commands are::
     sudo apt-get update 
     sudo apt-get install munin apache2
 
+The electrumx_bw plugin uses nethogs. To install it::
+
+	sudo apt-get install nethogs
+	
 Once you have munin up and running, add the following files::
 
  /etc/munin/plugins/
