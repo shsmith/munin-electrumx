@@ -51,23 +51,59 @@ if [ "$1" = "config" ]; then
 	exit 0
 fi
 
-bitcoinaverage=`curl -m 10 -L -s 'apiv2.bitcoinaverage.com/indices/global/ticker/BTCUSD' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["last"])'`
+bitcoinaverage=`curl -m 10 -L -s 'apiv2.bitcoinaverage.com/indices/global/ticker/BTCUSD' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin); print(j["last"])
+except:
+ pass'`
 echo bitcoinaverage.value $bitcoinaverage
 
-blockchain=`curl -m 10 -s 'blockchain.info/ticker' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["USD"]["last"])'`
+blockchain=`curl -m 10 -s 'blockchain.info/ticker' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin); print(j["USD"]["last"])
+except:
+ pass'`
 echo blockchain.value $blockchain
 
-btce=`curl -m 10 -L -s 'btc-e.com/api/3/ticker/btc_usd' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["btc_usd"]["last"])'`
+btce=`curl -m 10 -L -s 'btc-e.com/api/3/ticker/btc_usd' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin); print(j["btc_usd"]["last"])
+except:
+ pass'`
 echo btce.value $btce
 
-coinbase=`curl -m 10 -L -s 'api.gdax.com/products/BTC-USD/ticker' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["price"])'`
+coinbase=`curl -m 10 -L -s 'api.gdax.com/products/BTC-USD/ticker' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin); print(j["price"])
+except:
+ pass'`
 echo coinbase.value $coinbase
 
-coindesk=`curl -m 10 -L -s 'api.coindesk.com/v1/bpi/currentprice.json' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["bpi"]["USD"]["rate_float"])'`
+coindesk=`curl -m 10 -L -s 'api.coindesk.com/v1/bpi/currentprice.json' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin); print(j["bpi"]["USD"]["rate_float"])
+except:
+ pass'`
 echo coindesk.value $coindesk
 
-gemini=`curl -m 10 -L -s 'https://api.gemini.com/v1/pubticker/BTCUSD' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(j["last"])'`
+gemini=`curl -m 10 -L -s 'https://api.gemini.com/v1/pubticker/BTCUSD' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin); print(j["last"])
+except:
+ pass'`
 echo gemini.value $gemini
 
-winkdex=`curl -m 10 -L -s 'winkdex.com/api/v0/price' | python3 -c 'import sys, json; j=json.load(sys.stdin); print(float(j["price"])/100)'`
+winkdex=`curl -m 10 -L -s 'winkdex.com/api/v0/price' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin); print(float(j["price"])/100)
+except:
+ pass'`
 echo winkdex.value $winkdex
+
