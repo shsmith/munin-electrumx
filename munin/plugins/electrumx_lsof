@@ -72,6 +72,9 @@ if [ "$1" = "config" ]; then
 	echo 'sessions.label sessions'
 	echo 'sessions.type GAUGE'
 	echo 'sessions.max 10000'
+	echo 'leak.label leaked handles'
+	echo 'leak.type GAUGE'
+	echo 'leak.max 10000'
 	exit 0
 fi
 
@@ -94,20 +97,29 @@ TFILE=/tmp/munin-electrumx-lsof-$$
 /usr/local/bin/electrumx_rpc.py getinfo > $TFILE
 
 pid=`grep pid $TFILE | grep -o '[0-9]*'`
-echo "sessions.value `grep sessions $TFILE | grep -o '[0-9]*'`"
+sessions=`grep sessions $TFILE | grep -o '[0-9]*'`
+echo "sessions.value $sessions"
 
-/usr/bin/lsof -p $pid -n > $TFILE
+/usr/bin/lsof -p $pid -n | grep -v -e lib/python -e LISTEN > $TFILE
 
 # check for arch linux, which doesn't include network handles by default
 IP=`grep IP $TFILE | /usr/bin/wc -l`
 if [ $IP = "0" ]; then
-	/usr/bin/lsof -p $pid -n -i | grep IP >> $TFILE
+	/usr/bin/lsof -p $pid -n -i | grep IP | grep -v -e LISTEN >> $TFILE
 fi
 
-echo "lsof.value `/usr/bin/wc -l < $TFILE`"
-echo "ipv4.value `grep IPv4 $TFILE | /usr/bin/wc -l`"
-echo "ipv6.value `grep IPv6 $TFILE | /usr/bin/wc -l`"
-echo "sock.value `grep -e sock -e SOCK $TFILE | /usr/bin/wc -l`"
-echo "db.value `grep -v -e sock -e SOCK -e IPv $TFILE | /usr/bin/wc -l`"
+total=`/usr/bin/wc -l < $TFILE`
+ipv4=`grep IPv4 $TFILE | /usr/bin/wc -l`
+ipv6=`grep IPv6 $TFILE | /usr/bin/wc -l`
+socks=`grep -e sock -e SOCK $TFILE | /usr/bin/wc -l`
+db=`grep -v -e sock -e SOCK -e IPv $TFILE | /usr/bin/wc -l`
+leak=`expr $ipv4 + $ipv6 - $sessions + 1`
+
+echo "lsof.value $total"
+echo "ipv4.value $ipv4"
+echo "ipv6.value $ipv6"
+echo "sock.value $socks"
+echo "db.value $db"
+echo "leak.value $leak"
 
 rm $TFILE
