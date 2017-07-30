@@ -75,7 +75,7 @@ fi
 #    "txs_sent": 1
 #}
 
-TFILE=/tmp/munin-electrumx-sub-$$
+TFILE=/tmp/munin-electrumx-tx-$$
 /usr/local/bin/electrumx_rpc.py getinfo > $TFILE
 
 echo "txs_sent.value `grep txs_sent $TFILE | grep -o '[0-9]*'`"

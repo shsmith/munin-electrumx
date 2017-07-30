@@ -5,7 +5,7 @@
 
 =head1 NAME
 
-bitcoin_mp2 - Plugin to monitor bicoin daemon.
+bitcoin_mp2 - Plugin to monitor bitcoin daemon.
 
 =head1 CONFIGURATION
 

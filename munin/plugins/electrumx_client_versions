@@ -67,7 +67,7 @@ if [ "$1" = "autoconf" ]; then
 fi
 
 if [ "$1" = "config" ]; then
-	echo 'graph_title Electrum Client Versions'
+	echo 'graph_title ElectrumX Client Versions'
 	echo 'graph_args --base 1000 -l 0'
 	echo 'graph_vlabel sessions'
 	echo 'graph_category ElectrumX'

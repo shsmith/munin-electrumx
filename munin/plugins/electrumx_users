@@ -5,7 +5,7 @@
 
 =head1 NAME
 
-electrumx_peers - Plugin to monitor ElectrumX server.
+electrumx_users - Plugin to monitor ElectrumX server.
 
 =head1 CONFIGURATION
 

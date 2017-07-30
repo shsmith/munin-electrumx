@@ -5,7 +5,7 @@
 
 =head1 NAME
 
-bitcoin_con - Plugin to monitor bicoin daemon.
+bitcoin_conn - Plugin to monitor bitcoin daemon.
 
 =head1 CONFIGURATION
 
