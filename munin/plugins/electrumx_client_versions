@@ -35,35 +35,27 @@ electrumx_rpc=/usr/local/bin/electrumx_rpc.py
 # return count+1 and version for current and all previously seen versions
 known_versions() {
 	vfile=/tmp/electrumx_client_versions
-
+	knownfile=${vfile}.known2
+	temp=${vfile}-$$
+	
 	# get new version items, sanitize as valid munin identifiers
-	${electrumx_rpc} sessions | awk '{print $3}' | sed 's/[^a-zA-Z0-9_]/-/g' > ${vfile}.new
+	${electrumx_rpc} sessions | awk '{print $3}' > ${temp}i
 
 	# combine with previously known versions
-	if [ -e ${vfile}.known ]; then
-		cat ${vfile}.known >> ${vfile}.new
-	fi
-	sort < ${vfile}.new | uniq > ${vfile}.known
+	echo "Client" >> ${knownfile}
+	cat ${knownfile} >> ${temp}i
+	grep < ${temp}i -v -e RPC -e Client | sort > ${temp}o
+	uniq < ${temp}o > ${knownfile}
 
 	# return count+1 and version
 	# limit to the most active 100 versions and sorted by reverse version number
-	# reporting only proper version x.x.x, unknown, or with _ (eg. all_knowing_eye)
-	sort < ${vfile}.new | grep -e .*-.*-.* -e unknown -e _ | uniq -c | sort -n -r | head -n 100 | sort -V -r -k 2
+	sed < ${temp}o 's/[^a-zA-Z0-9_]/-/g' | uniq -c | sort -n -r | head -n 100 | sort -V -r -k 2
+	rm ${temp}*
 }
 
 if [ "$1" = "autoconf" ]; then
-	if ( ${electrumx_rpc} getinfo >/dev/null 2>&1 ); then
-		echo yes
-		exit 0
-	else
-		if [ $? -eq 127 ]; then
-			echo "no (could not run \"${electrumx_rpc}\")"
-			exit 0
-		else
-			echo no
-			exit 0
-		fi
-	fi
+	echo yes
+	exit 0
 fi
 
 if [ "$1" = "config" ]; then
