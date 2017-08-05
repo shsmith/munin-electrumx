@@ -46,23 +46,20 @@ known_versions() {
 	sort < ${vfile}.new | uniq > ${vfile}.known
 
 	# return count+1 and version
-	# limit to the most active 100 versions and sorted by reverse version number
-	sort < ${vfile}.new | uniq -c | sort -n -r | head -n 100 | sort -V -r -k 2
+	# limit to the most active 100 versions
+	sort < ${vfile}.new | uniq -c | sort -n -r | head -n 100
 }
 
+# quit of daemon is not responding to RPC
+uptime=`${electrumx_rpc} getinfo | grep -o uptime`
+if [ "$uptime" = "" ]; then
+	echo "${electrumx_rpc} not ready"
+	exit 0
+fi
+	
 if [ "$1" = "autoconf" ]; then
-	if ( ${electrumx_rpc} getinfo >/dev/null 2>&1 ); then
-		echo yes
-		exit 0
-	else
-		if [ $? -eq 127 ]; then
-			echo "no (could not run \"${electrumx_rpc}\")"
-			exit 0
-		else
-			echo no
-			exit 0
-		fi
-	fi
+	echo yes
+	exit 0
 fi
 
 if [ "$1" = "config" ]; then

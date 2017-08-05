@@ -37,7 +37,7 @@ known_versions() {
 	vfile=/tmp/electrumx_client_versions
 	knownfile=${vfile}.known2
 	temp=${vfile}-$$
-	
+
 	# get new version items, sanitize as valid munin identifiers
 	${electrumx_rpc} sessions | awk '{print $3}' > ${temp}i
 
@@ -48,10 +48,17 @@ known_versions() {
 	uniq < ${temp}o > ${knownfile}
 
 	# return count+1 and version
-	# limit to the most active 100 versions and sorted by reverse version number
-	sed < ${temp}o 's/[^a-zA-Z0-9_]/-/g' | uniq -c | sort -n -r | head -n 100 | sort -V -r -k 2
+	# limit to the most active 100 versions 
+	sed < ${temp}o 's/[^a-zA-Z0-9_]/-/g' | uniq -c | sort -n -r | head -n 100
 	rm ${temp}*
 }
+
+# quit of daemon is not responding to RPC
+uptime=`${electrumx_rpc} getinfo | grep -o uptime`
+if [ "$uptime" = "" ]; then
+	echo "${electrumx_rpc} not ready"
+	exit 0
+fi
 
 if [ "$1" = "autoconf" ]; then
 	echo yes
