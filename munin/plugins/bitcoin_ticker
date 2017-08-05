@@ -45,6 +45,7 @@ if [ "$1" = "config" ]; then
 	echo 'coindesk.label coindesk.com'
 	echo 'coinmarketcap.label coinmarketcap.com'
 	echo 'gemini.label gemini.com'
+	echo 'kraken.label kraken.com'
 	echo 'winkdex.label winkdex.com'
 	exit 0
 fi
@@ -102,6 +103,13 @@ curl -m 10 -L -s 'https://api.gemini.com/v1/pubticker/BTCUSD' | python3 -c '
 import sys, json
 try:
  j=json.load(sys.stdin); print("gemini.value " + str(j["last"]))
+except:
+ pass'
+
+curl -m 10 -L -s 'https://api.kraken.com/0/public/Ticker?pair=XBTUSD' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin); print("kraken.value " + str(j["result"]["XXBTZUSD"]["c"][0]))
 except:
  pass'
 
