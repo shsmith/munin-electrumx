@@ -1,0 +1,100 @@
+#!/bin/sh
+# -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+bitcoin_ticker - Plugin to monitor bitcoin cash tickers.
+
+=head1 CONFIGURATION
+
+=head1 NOTES
+
+=head1 AUTHOR
+
+shsmith
+
+=head1 LICENSE
+
+GPLv2
+
+=head1 MAGIC MARKERS
+
+ #%# family=auto
+ #%# capabilities=autoconf
+
+=cut
+
+if [ "$1" = "autoconf" ]; then
+	echo yes
+	exit 0
+fi
+
+if [ "$1" = "config" ]; then
+	echo 'multigraph bch_btc'
+	echo 'graph_title bitcoin cash tickers - btc'
+	echo 'graph_args --base 1000'
+	#echo 'graph_scale no'
+	echo 'graph_vlabel BTC'
+	echo 'graph_category bitcoind'
+	echo 'cexio_btc.label cex.io'
+	echo 'coinmarketcap_btc.label coinmarketcap.com'
+
+	echo 'multigraph bch_usd'
+	echo 'graph_title bitcoin cash tickers - usd'
+	echo 'graph_args --base 1000'
+	echo 'graph_scale no'
+	echo 'graph_vlabel USD'
+	echo 'graph_category bitcoind'
+	echo 'cexio_usd.label cex.io'
+	echo 'coinmarketcap_usd.label coinmarketcap.com'
+
+	echo 'multigraph bch_cny'
+	echo 'graph_title bitcoin cash tickers - cny'
+	echo 'graph_args --base 1000'
+	echo 'graph_scale no'
+	echo 'graph_vlabel CNY'
+	echo 'graph_category bitcoind'
+	echo 'coinmarketcap_cny.label coinmarketcap.com'
+	echo 'chbtc_cny.label chbtc.com'
+	exit 0
+fi
+
+coinmarketcap=`curl -m 10 -L -s 'https://api.coinmarketcap.com/v1/ticker/bitcoin-cash/?convert=CNY' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin)
+ print("#coinmarketcap_btc.value " + j[0]["price_btc"])
+ print("#coinmarketcap_usd.value " + j[0]["price_usd"])
+ print("#coinmarketcap_cny.value " + j[0]["price_cny"])
+except:
+ pass'`
+
+cexio=`curl -m 10 -L -s 'https://cex.io/api/tickers/USD/BCH/BTC' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin)
+ print("#cexio_usd.value " + str(j["data"][1]["last"]))
+ print("#cexio_btc.value " + str(j["data"][3]["last"]))
+except:
+ pass'`
+ 
+echo multigraph bch_btc
+echo $cexio | tr '#' '\n' | grep btc
+echo $coinmarketcap | tr '#' '\n' | grep btc
+
+echo multigraph bch_usd
+echo $cexio | tr '#' '\n' | grep usd
+echo $coinmarketcap | tr '#' '\n' | grep usd
+
+echo multigraph bch_cny
+echo $coinmarketcap | tr '#' '\n' | grep cny
+
+curl -m 10 -L -s 'http://api.chbtc.com/data/v1/ticker?currency=bcc_cny' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin)
+ print("chbtc_cny.value " + j["ticker"]["last"])
+except:
+ pass'
