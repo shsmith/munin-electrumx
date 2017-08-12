@@ -51,16 +51,19 @@ Once you have munin up and running, add the following files::
     electrumx_tx
     electrumx_users
 
-Some of these plugins require additional permissions in order to inspect the 
-running processes. These permissions are granted by the following files added 
-to your plugin-conf.d folder.::
+These plugins require configuration. 
+The configurations are in the following files added to your plugin-conf.d folder.::
 
  /etc/munin/plugin-conf.d/
     bitcoin
     electrumx
 
-You will need to edit the plugin-conf.d/bitcoin and adjust the BITCOIN_DATADIR
-environment to specify where to find your bitcoin data directory.
+You will need to edit /etc/munin/plugin-conf.d/bitcoin. 
+Adjust the BITCOIN_DATADIR environment to specify where to find your bitcoin data directory.
+Adjust the BITCOIN_CLI environment to specify where to find bitcoin-cli.
+
+You will need to edit /etc/munin/plugin-conf.d/electrumx. 
+Adjust the ELECTRUMX_RPC environment to specify where to find electrumx_rpc.py.
 
 After configuring the plugins, restart the munin-node service.
 

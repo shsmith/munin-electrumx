@@ -1,7 +1,5 @@
 
-[bitcoin_vm]
+[bitcoin_*]
 user root
 env.BITCOIN_DATADIR /home/shsmith/.bitcoin
-
-[bitcoin_*]
-env.BITCOIN_DATADIR /home/shsmith/.bitcoin
+env.BITCOIN_CLI /usr/bin/bitcoin-cli

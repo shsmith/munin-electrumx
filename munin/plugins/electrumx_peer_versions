@@ -9,11 +9,13 @@ electrumx_peer_versions - Plugin to monitor ElectrumX server.
 
 =head1 CONFIGURATION
 
-No configuration
+Settings are stored in /etc/munin/plugin-conf.d/bitcoin.
+Edit the BITCOIN_DATADIR setting to specify the location of your bitcoin data directory.
+Edit the BITCOIN_CLI setting to specify the location of bitcoin-cli.
 
 =head1 NOTES
 
-Uses the command "electrumx_rpc.py"
+Uses env.ELECTRUMX_RPC in /etc/munin/plugin-conf.d/electrumx
 
 =head1 AUTHOR
 
@@ -30,14 +32,12 @@ GPLv2
 
 =cut
 
-electrumx_rpc=/usr/local/bin/electrumx_rpc.py
-
 # return count+1 and version for current and all previously seen versions
 known_versions() {
 	vfile=/tmp/electrumx_peer_versions
 
 	# get new version items, sanitize as valid munin identifiers
-	${electrumx_rpc} peers | cut -c51-68 | grep -v Server | sed 's/ /_/g; s#/#AA#g; s/[^a-zA-Z0-9_]/-/g; s/-*$//' > ${vfile}.new
+	${ELECTRUMX_RPC} peers | cut -c51-68 | grep -v Server | sed 's/ /_/g; s#/#AA#g; s/[^a-zA-Z0-9_]/-/g; s/-*$//' > ${vfile}.new
 
 	# combine with previously known versions
 	if [ -e ${vfile}.known ]; then
@@ -51,9 +51,9 @@ known_versions() {
 }
 
 # quit of daemon is not responding to RPC
-uptime=`${electrumx_rpc} getinfo | grep -o uptime`
+uptime=`${ELECTRUMX_RPC} getinfo | grep -o uptime`
 if [ "$uptime" = "" ]; then
-	echo "${electrumx_rpc} not ready"
+	echo "${ELECTRUMX_RPC} not ready"
 	exit 0
 fi
 	

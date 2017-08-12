@@ -9,11 +9,13 @@ bitcoin_peer_versions - Plugin to monitor bitcoin daemon.
 
 =head1 CONFIGURATION
 
+Settings are stored in /etc/munin/plugin-conf.d/bitcoin.
 Edit the BITCOIN_DATADIR setting to specify the location of your bitcoin data directory.
+Edit the BITCOIN_CLI setting to specify the location of bitcoin-cli.
 
 =head1 NOTES
 
-Uses the command "bitcoin-cli"
+Uses env.BITCOIN_CLI and env.BITCOIN_DATADIR in /etc/munin/plugin-conf.d/bitcoin
 
 =head1 AUTHOR
 
@@ -30,15 +32,12 @@ GPLv2
 
 =cut
 
-BITCOIN_DATADIR=/home/shsmith/.bitcoin
-bitcoin_cli=/usr/bin/bitcoin-cli
-
 # return count+1 and version for current and all previously seen versions
 known_versions() {
 	vfile=/tmp/bitcoin_peer_versions
 
 	# get new version items, sanitize as valid munin identifiers
-	${bitcoin_cli} -datadir=$BITCOIN_DATADIR getpeerinfo | grep subver | grep / | tr '"' ' ' | sed 's/     subver :  //g; s/ ,//g' | \
+	${BITCOIN_CLI} -datadir=$BITCOIN_DATADIR getpeerinfo | grep subver | grep / | tr '"' ' ' | sed 's/     subver :  //g; s/ ,//g' | \
 		cut -c 1-45 | \
 		sed 's/ /_SP_/g; s#/#_SL_#g; s/:/_CO_/g; s/\./_DP_/g; s/;/_SC_/g; s/(/_OP_/g; s/)/_CL_/g; s/[^a-zA-Z0-9_]/-/g' > ${vfile}.new
 
@@ -55,6 +54,7 @@ known_versions() {
 
 if [ "$1" = "autoconf" ]; then
 	echo yes
+	exit 0
 fi
 
 if [ "$1" = "config" ]; then

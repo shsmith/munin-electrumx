@@ -5,11 +5,15 @@
 
 =head1 NAME
 
-bitcoin_ticker - Plugin to monitor bcash tickers.
+bitcoin_ticker_bch - Plugin to monitor bcash tickers.
 
 =head1 CONFIGURATION
 
+No configuration.
+
 =head1 NOTES
+
+Uses python3.
 
 =head1 AUTHOR
 

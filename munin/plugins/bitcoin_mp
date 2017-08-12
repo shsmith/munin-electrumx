@@ -9,11 +9,13 @@ bitcoin_mp - Plugin to monitor bitcoin daemon.
 
 =head1 CONFIGURATION
 
+Settings are stored in /etc/munin/plugin-conf.d/bitcoin.
 Edit the BITCOIN_DATADIR setting to specify the location of your bitcoin data directory.
+Edit the BITCOIN_CLI setting to specify the location of bitcoin-cli.
 
 =head1 NOTES
 
-Uses the command "bitcoin-cli"
+Uses env.BITCOIN_CLI and env.BITCOIN_DATADIR in /etc/munin/plugin-conf.d/bitcoin
 
 =head1 AUTHOR
 
@@ -30,21 +32,9 @@ GPLv2
 
 =cut
 
-. $MUNIN_LIBDIR/plugins/plugin.sh
-
 if [ "$1" = "autoconf" ]; then
-	if ( bitcoin-cli -datadir=$BITCOIN_DATADIR getdifficulty >/dev/null 2>&1 ); then
-		echo yes
-		exit 0
-	else
-		if [ $? -eq 127 ]; then
-			echo "no (could not run \"bitcoin-cli\")"
-			exit 0
-		else
-			echo no
-			exit 0
-		fi
-	fi
+	echo yes
+	exit 0
 fi
 
 if [ "$1" = "config" ]; then
@@ -58,7 +48,7 @@ if [ "$1" = "config" ]; then
 	exit 0
 fi
 
-# bitcoin-cli getmempoolinfo
+# ${BITCOIN_CLI} getmempoolinfo
 #{
 #  "size": 11853,
 #  "bytes": 45560692,
@@ -68,7 +58,7 @@ fi
 #}
 
 TFILE=/tmp/munin-bitcoin-mp-$$
-/usr/bin/bitcoin-cli -datadir=$BITCOIN_DATADIR getmempoolinfo > $TFILE
+${BITCOIN_CLI} -datadir=$BITCOIN_DATADIR getmempoolinfo > $TFILE
 
 echo "size.value `grep size $TFILE | grep -o '[0-9]*'`"
 

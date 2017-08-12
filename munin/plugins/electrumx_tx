@@ -9,11 +9,12 @@ electrumx_tx - Plugin to monitor ElectrumX server.
 
 =head1 CONFIGURATION
 
-No configuration
+Settings are stored in /etc/munin/plugin-conf.d/electrumx.
+Edit the ELECTRUMX_RPC setting to specify the location of electrumx_rpc.py.
 
 =head1 NOTES
 
-Uses the command "electrumx_rpc.py"
+Uses env.ELECTRUMX_RPC in /etc/munin/plugin-conf.d/electrumx
 
 =head1 AUTHOR
 
@@ -30,21 +31,9 @@ GPLv2
 
 =cut
 
-. $MUNIN_LIBDIR/plugins/plugin.sh
-
 if [ "$1" = "autoconf" ]; then
-	if ( electrumx_rpc.py getinfo >/dev/null 2>&1 ); then
-		echo yes
-		exit 0
-	else
-		if [ $? -eq 127 ]; then
-			echo "no (could not run \"electrumx_rpc.py\")"
-			exit 0
-		else
-			echo no
-			exit 0
-		fi
-	fi
+	echo yes
+	exit 0
 fi
 
 if [ "$1" = "config" ]; then
@@ -76,7 +65,7 @@ fi
 #}
 
 TFILE=/tmp/munin-electrumx-tx-$$
-/usr/local/bin/electrumx_rpc.py getinfo > $TFILE
+${ELECTRUMX_RPC} getinfo > $TFILE
 
 echo "txs_sent.value `grep txs_sent $TFILE | grep -o '[0-9]*'`"
 

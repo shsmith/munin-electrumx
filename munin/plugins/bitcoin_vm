@@ -9,11 +9,13 @@ bitcoin_vm - Plugin to monitor bitcoin daemon.
 
 =head1 CONFIGURATION
 
+Settings are stored in /etc/munin/plugin-conf.d/bitcoin.
 Edit the BITCOIN_DATADIR setting to specify the location of your bitcoin data directory.
+Edit the BITCOIN_CLI setting to specify the location of bitcoin-cli.
 
 =head1 NOTES
 
-Uses the command "bitcoin-cli"
+Uses env.BITCOIN_CLI and env.BITCOIN_DATADIR in /etc/munin/plugin-conf.d/bitcoin
 
 =head1 AUTHOR
 
@@ -30,28 +32,9 @@ GPLv2
 
 =cut
 
-. $MUNIN_LIBDIR/plugins/plugin.sh
-
 if [ "$1" = "autoconf" ]; then
-	# we can't query vm on remote bitcoind, so disable this counter when needed
-	pid=`pidof bitcoind`
-	if [ "$pid" = "" ]; then
-		echo "no (bitcoind not running locally)"
-		exit 0
-	fi
-
-	if ( bitcoin-cli -datadir=$BITCOIN_DATADIR getdifficulty >/dev/null 2>&1 ); then
-		echo yes
-		exit 0
-	else
-		if [ $? -eq 127 ]; then
-			echo "no (could not run \"bitcoin-cli\")"
-			exit 0
-		else
-			echo no
-			exit 0
-		fi
-	fi
+	echo yes
+	exit 0
 fi
 
 if [ "$1" = "config" ]; then

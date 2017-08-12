@@ -9,7 +9,11 @@ bitcoin_ticker - Plugin to monitor bitcoin tickers.
 
 =head1 CONFIGURATION
 
+No configuration.
+
 =head1 NOTES
+
+Uses python3.
 
 =head1 AUTHOR
 
