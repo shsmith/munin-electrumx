@@ -38,10 +38,10 @@ Once you have munin up and running, add the following files::
     bitcoin_ticker
     bitcoin_ticker_bch
     bitcoin_vm
-	electrumx_bw
+    electrumx_bw
     electrumx_client_versions
     electrumx_err
-	electrumx_io
+    electrumx_io
     electrumx_lsof
     electrumx_mem
     electrumx_peers
