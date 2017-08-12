@@ -44,6 +44,7 @@ if [ "$1" = "config" ]; then
 	echo 'coinbase.label coinbase.com (gdax)'
 	echo 'coindesk.label coindesk.com'
 	echo 'coinmarketcap.label coinmarketcap.com'
+	echo 'cryptonator.label cryptonator.com'
 	echo 'gemini.label gemini.com'
 	echo 'kraken.label kraken.com'
 	echo 'winkdex.label winkdex.com'
@@ -96,6 +97,14 @@ curl -m 10 -L -s 'https://api.coinmarketcap.com/v1/ticker/bitcoin' | python3 -c 
 import sys, json
 try:
  j=json.load(sys.stdin); print("coinmarketcap.value " + str(j[0]["price_usd"]))
+except:
+ pass'
+
+curl -m 10 -L -s 'https://api.cryptonator.com/api/ticker/btc-usd' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin)
+ print("cryptonator.value " + j["ticker"]["price"])
 except:
  pass'
 

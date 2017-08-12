@@ -5,7 +5,7 @@
 
 =head1 NAME
 
-bitcoin_ticker - Plugin to monitor bitcoin cash tickers.
+bitcoin_ticker - Plugin to monitor bcash tickers.
 
 =head1 CONFIGURATION
 
@@ -33,34 +33,37 @@ fi
 
 if [ "$1" = "config" ]; then
 	echo 'multigraph bch_btc'
-	echo 'graph_title bitcoin cash tickers - btc'
+	echo 'graph_title bcash tickers - btc'
 	echo 'graph_args --base 1000'
 	#echo 'graph_scale no'
 	echo 'graph_vlabel BTC'
 	echo 'graph_category bitcoind'
 	echo 'cexio_btc.label cex.io'
 	echo 'coinmarketcap_btc.label coinmarketcap.com'
+	echo 'cryptonator_btc.label cryptonator.com'
 	echo 'kraken_btc.label kraken.com'
 	echo 'shapeshift_btc.label shapeshift.io'
 
 	echo 'multigraph bch_usd'
-	echo 'graph_title bitcoin cash tickers - usd'
+	echo 'graph_title bcash tickers - usd'
 	echo 'graph_args --base 1000'
 	echo 'graph_scale no'
 	echo 'graph_vlabel USD'
 	echo 'graph_category bitcoind'
 	echo 'cexio_usd.label cex.io'
 	echo 'coinmarketcap_usd.label coinmarketcap.com'
+	echo 'cryptonator_usd.label cryptonator.com'
 	echo 'kraken_usd.label kraken.com'
 
 	echo 'multigraph bch_cny'
-	echo 'graph_title bitcoin cash tickers - cny'
+	echo 'graph_title bcash tickers - cny'
 	echo 'graph_args --base 1000'
 	echo 'graph_scale no'
 	echo 'graph_vlabel CNY'
 	echo 'graph_category bitcoind'
 	echo 'coinmarketcap_cny.label coinmarketcap.com'
 	echo 'chbtc_cny.label chbtc.com'
+	echo 'cryptonator_cny.label cryptonator.com'
 	exit 0
 fi
 
@@ -95,6 +98,15 @@ except:
 echo multigraph bch_btc
 echo $cexio | tr '#' '\n' | grep btc
 echo $coinmarketcap | tr '#' '\n' | grep btc
+
+curl -m 10 -L -s 'https://api.cryptonator.com/api/ticker/bcc-btc' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin)
+ print("cryptonator_btc.value " + j["ticker"]["price"])
+except:
+ pass'
+
 echo $kraken | tr '#' '\n' | grep btc
 
 curl -m 10 -L -s 'https://shapeshift.io/marketinfo/bch_btc' | python3 -c '
@@ -108,6 +120,15 @@ except:
 echo multigraph bch_usd
 echo $cexio | tr '#' '\n' | grep usd
 echo $coinmarketcap | tr '#' '\n' | grep usd
+
+curl -m 10 -L -s 'https://api.cryptonator.com/api/ticker/bcc-usd' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin)
+ print("cryptonator_usd.value " + j["ticker"]["price"])
+except:
+ pass'
+
 echo $kraken | tr '#' '\n' | grep usd
 
 echo multigraph bch_cny
@@ -121,3 +142,12 @@ except:
  pass'
 
 echo $coinmarketcap | tr '#' '\n' | grep cny
+
+curl -m 10 -L -s 'https://api.cryptonator.com/api/ticker/bcc-cny' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin)
+ print("cryptonator_cny.value " + j["ticker"]["price"])
+except:
+ pass'
+
