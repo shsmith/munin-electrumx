@@ -42,7 +42,9 @@ if [ "$1" = "config" ]; then
 	echo 'graph_vlabel value'
 	echo 'graph_category bitcoind'
 	echo 'bitcoin.label bitcoin'
+	echo 'bitcoin.draw AREASTACK'
 	echo 'electrumx.label electrumx'
+	echo 'electrumx.draw AREASTACK'
 	exit 0
 fi
 
