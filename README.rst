@@ -31,6 +31,7 @@ Once you have munin up and running, add the following files::
     bitcoin_bw  
     bitcoin_conn
     bitcoin_diff
+    bitcoin_du
     bitcoin_fee
     bitcoin_mp
     bitcoin_mp2
@@ -61,6 +62,7 @@ The configurations are in the following files added to your plugin-conf.d folder
 You will need to edit /etc/munin/plugin-conf.d/bitcoin. 
 Adjust the BITCOIN_DATADIR environment to specify where to find your bitcoin data directory.
 Adjust the BITCOIN_CLI environment to specify where to find bitcoin-cli.
+Adjust the ELECTRUMX_DATADIR environment to specify where to find your electrumx data directory.
 
 You will need to edit /etc/munin/plugin-conf.d/electrumx. 
 Adjust the ELECTRUMX_RPC environment to specify where to find electrumx_rpc.py.

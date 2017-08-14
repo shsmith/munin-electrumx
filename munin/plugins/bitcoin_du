@@ -1,0 +1,53 @@
+#!/bin/sh
+# -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+bitcoin_du - Plugin to monitor bitcoin daemon.
+
+=head1 CONFIGURATION
+
+Settings are stored in /etc/munin/plugin-conf.d/bitcoin.
+Edit the BITCOIN_DATADIR setting to specify the location of your bitcoin data directory.
+
+=head1 NOTES
+
+Uses env.BITCOIN_DATADIR and env.ELECTRUMX_DATADIR in /etc/munin/plugin-conf.d/bitcoin
+
+=head1 AUTHOR
+
+shsmith
+
+=head1 LICENSE
+
+GPLv2
+
+=head1 MAGIC MARKERS
+
+ #%# family=auto
+ #%# capabilities=autoconf
+
+=cut
+
+if [ "$1" = "autoconf" ]; then
+	echo yes
+	exit 0
+fi
+
+if [ "$1" = "config" ]; then
+	echo 'graph_title bitcoind disk usage'
+	echo 'graph_args --base 1024 -l 0'
+	echo 'graph_vlabel value'
+	echo 'graph_category bitcoind'
+	echo 'bitcoin.label bitcoin'
+	echo 'electrumx.label electrumx'
+	exit 0
+fi
+
+du -s -b ${BITCOIN_DATADIR}/ | awk '{print "bitcoin.value " $1}'
+du -s -b ${ELECTRUMX_DATADIR}/ | awk '{print "electrumx.value " $1}'
+
+exit 0
+
