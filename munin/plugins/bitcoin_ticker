@@ -51,7 +51,6 @@ if [ "$1" = "config" ]; then
 	echo 'cryptonator.label cryptonator.com'
 	echo 'gemini.label gemini.com'
 	echo 'kraken.label kraken.com'
-	echo 'southxchange.label southxchange.com'
 	echo 'winkdex.label winkdex.com'
 	exit 0
 fi
@@ -127,14 +126,6 @@ try:
 except:
  pass'
 
-curl -m 10 -L -s 'https://www.southxchange.com/api/price/BTC/USD' | python3 -c '
-import sys, json
-try:
- j=json.load(sys.stdin)
- print("southxchange.value " + str(j["Last"]))
-except:
- pass'
- 
 curl -m 10 -L -s 'http://winkdex.com/api/v0/price' | python3 -c '
 import sys, json
 try:
