@@ -47,6 +47,7 @@ if [ "$1" = "config" ]; then
 	echo 'cryptonator_btc.label cryptonator.com'
 	echo 'kraken_btc.label kraken.com'
 	echo 'shapeshift_btc.label shapeshift.io'
+	echo 'southxchange_btc.label southxchange.com'
 
 	echo 'multigraph bch_usd'
 	echo 'graph_title bcash tickers - usd'
@@ -58,7 +59,8 @@ if [ "$1" = "config" ]; then
 	echo 'coinmarketcap_usd.label coinmarketcap.com'
 	echo 'cryptonator_usd.label cryptonator.com'
 	echo 'kraken_usd.label kraken.com'
-
+	echo 'southxchange_usd.label southxchange.com'
+	
 	echo 'multigraph bch_cny'
 	echo 'graph_title bcash tickers - cny'
 	echo 'graph_args --base 1000'
@@ -121,6 +123,14 @@ try:
 except:
  pass'
 
+curl -m 10 -L -s 'https://www.southxchange.com/api/price/BCH/BTC' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin)
+ print("southxchange_btc.value " + str(j["Last"]))
+except:
+ pass'
+ 
 echo multigraph bch_usd
 echo $cexio | tr '#' '\n' | grep usd
 echo $coinmarketcap | tr '#' '\n' | grep usd
@@ -135,6 +145,14 @@ except:
 
 echo $kraken | tr '#' '\n' | grep usd
 
+curl -m 10 -L -s 'https://www.southxchange.com/api/price/BCH/USD' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin)
+ print("southxchange_usd.value " + str(j["Last"]))
+except:
+ pass'
+ 
 echo multigraph bch_cny
 
 curl -m 10 -L -s 'http://api.chbtc.com/data/v1/ticker?currency=bcc_cny' | python3 -c '
