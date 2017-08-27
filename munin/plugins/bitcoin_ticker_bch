@@ -45,6 +45,7 @@ if [ "$1" = "config" ]; then
 	echo 'cexio_btc.label cex.io'
 	echo 'coinmarketcap_btc.label coinmarketcap.com'
 	echo 'cryptonator_btc.label cryptonator.com'
+	echo 'hitbtc_btc.label hitbtc.com'
 	echo 'kraken_btc.label kraken.com'
 	echo 'shapeshift_btc.label shapeshift.io'
 
@@ -57,6 +58,7 @@ if [ "$1" = "config" ]; then
 	echo 'cexio_usd.label cex.io'
 	echo 'coinmarketcap_usd.label coinmarketcap.com'
 	echo 'cryptonator_usd.label cryptonator.com'
+	echo 'hitbtc_usd.label hitbtc.com'
 	echo 'kraken_usd.label kraken.com'
 
 	echo 'multigraph bch_cny'
@@ -90,6 +92,15 @@ try:
 except:
  pass'`
 
+hitbtc=`curl -m 10 -L -s 'https://api.hitbtc.com/api/1/public/ticker' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin)
+ print("#hitbtc_btc.value " + str(j["BCCBTC"]["last"]))
+ print("#hitbtc_usd.value " + str(j["BCCUSD"]["last"]))
+except:
+ pass'`
+
 kraken=`curl -m 10 -L -s 'https://api.kraken.com/0/public/Ticker?pair=BCHUSD,BCHXBT' | python3 -c '
 import sys, json
 try:
@@ -111,6 +122,7 @@ try:
 except:
  pass'
 
+echo $hitbtc  | tr '#' '\n' | grep _btc
 echo $kraken | tr '#' '\n' | grep btc
 
 curl -m 10 -L -s 'https://shapeshift.io/marketinfo/bch_btc' | python3 -c '
@@ -133,6 +145,7 @@ try:
 except:
  pass'
 
+echo $hitbtc  | tr '#' '\n' | grep usd
 echo $kraken | tr '#' '\n' | grep usd
 
 echo multigraph bch_cny
