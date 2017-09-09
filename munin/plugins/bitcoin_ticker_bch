@@ -44,7 +44,6 @@ if [ "$1" = "config" ]; then
 	echo 'graph_category bitcoind'
 	echo 'cexio_btc.label cex.io'
 	echo 'coinmarketcap_btc.label coinmarketcap.com'
-	echo 'cryptonator_btc.label cryptonator.com'
 	echo 'hitbtc_btc.label hitbtc.com'
 	echo 'kraken_btc.label kraken.com'
 	echo 'shapeshift_btc.label shapeshift.io'
@@ -57,7 +56,6 @@ if [ "$1" = "config" ]; then
 	echo 'graph_category bitcoind'
 	echo 'cexio_usd.label cex.io'
 	echo 'coinmarketcap_usd.label coinmarketcap.com'
-	echo 'cryptonator_usd.label cryptonator.com'
 	echo 'hitbtc_usd.label hitbtc.com'
 	echo 'kraken_usd.label kraken.com'
 
@@ -69,7 +67,6 @@ if [ "$1" = "config" ]; then
 	echo 'graph_category bitcoind'
 	echo 'coinmarketcap_cny.label coinmarketcap.com'
 	echo 'chbtc_cny.label chbtc.com'
-	echo 'cryptonator_cny.label cryptonator.com'
 	exit 0
 fi
 
@@ -114,14 +111,6 @@ echo multigraph bch_btc
 echo $cexio | tr '#' '\n' | grep btc
 echo $coinmarketcap | tr '#' '\n' | grep btc
 
-curl -m 10 -L -s 'https://api.cryptonator.com/api/ticker/bcc-btc' | python3 -c '
-import sys, json
-try:
- j=json.load(sys.stdin)
- print("cryptonator_btc.value " + j["ticker"]["price"])
-except:
- pass'
-
 echo $hitbtc  | tr '#' '\n' | grep _btc
 echo $kraken | tr '#' '\n' | grep btc
 
@@ -137,14 +126,6 @@ echo multigraph bch_usd
 echo $cexio | tr '#' '\n' | grep usd
 echo $coinmarketcap | tr '#' '\n' | grep usd
 
-curl -m 10 -L -s 'https://api.cryptonator.com/api/ticker/bcc-usd' | python3 -c '
-import sys, json
-try:
- j=json.load(sys.stdin)
- print("cryptonator_usd.value " + j["ticker"]["price"])
-except:
- pass'
-
 echo $hitbtc  | tr '#' '\n' | grep usd
 echo $kraken | tr '#' '\n' | grep usd
 
@@ -159,12 +140,4 @@ except:
  pass'
 
 echo $coinmarketcap | tr '#' '\n' | grep cny
-
-curl -m 10 -L -s 'https://api.cryptonator.com/api/ticker/bcc-cny' | python3 -c '
-import sys, json
-try:
- j=json.load(sys.stdin)
- print("cryptonator_cny.value " + j["ticker"]["price"])
-except:
- pass'
 

@@ -43,7 +43,6 @@ if [ "$1" = "config" ]; then
 	echo 'graph_category bitcoind'
 	echo 'bitcoinaverage.label bitcoinaverage.com'
 	echo 'blockchain.label blockchain.info'
-	#echo 'btce.label btc-e.com'
 	echo 'cexio.label cex.io'
 	echo 'coinbase.label coinbase.com (gdax)'
 	echo 'coindesk.label coindesk.com'
@@ -69,13 +68,6 @@ try:
  j=json.load(sys.stdin); print("blockchain.value " + str(j["USD"]["last"]))
 except:
  pass'
-
-#curl -m 10 -L -s 'btc-e.com/api/3/ticker/btc_usd' | python3 -c '
-#import sys, json
-#try:
-# j=json.load(sys.stdin); print("btce.value " + str(j["btc_usd"]["last"]))
-#except:
-# pass'
 
 curl -m 10 -L -s 'api.gdax.com/products/BTC-USD/ticker' | python3 -c '
 import sys, json
