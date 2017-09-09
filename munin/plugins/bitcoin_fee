@@ -51,30 +51,13 @@ if [ "$1" = "config" ]; then
 	echo 'estimatesmartfee1.type GAUGE'
 	echo 'estimatesmartfee1.min 0'
 	echo 'estimatesmartfee1.cdef estimatesmartfee1,97656,*'
-	echo 'estimatesmartfee2.label estimatesmartfee 2 blocks'
-	echo 'estimatesmartfee2.type GAUGE'
-	echo 'estimatesmartfee2.min 0'
-	echo 'estimatesmartfee2.cdef estimatesmartfee2,97656,*'
-	echo 'estimatesmartfee3.label estimatesmartfee 3 blocks'
-	echo 'estimatesmartfee3.type GAUGE'
-	echo 'estimatesmartfee3.min 0'
-	echo 'estimatesmartfee3.cdef estimatesmartfee3,97656,*'
-	echo 'estimatesmartfee4.label estimatesmartfee 4 blocks'
-	echo 'estimatesmartfee4.type GAUGE'
-	echo 'estimatesmartfee4.min 0'
-	echo 'estimatesmartfee4.cdef estimatesmartfee4,97656,*'
-	echo 'estimatesmartfee5.label estimatesmartfee 5 blocks'
-	echo 'estimatesmartfee5.type GAUGE'
-	echo 'estimatesmartfee5.min 0'
-	echo 'estimatesmartfee5.cdef estimatesmartfee5,97656,*'
-	echo 'estimatesmartfee10.label estimatesmartfee 10 blocks'
-	echo 'estimatesmartfee10.type GAUGE'
-	echo 'estimatesmartfee10.min 0'
-	echo 'estimatesmartfee10.cdef estimatesmartfee10,97656,*'
-	echo 'estimatesmartfee20.label estimatesmartfee 20 blocks'
-	echo 'estimatesmartfee20.type GAUGE'
-	echo 'estimatesmartfee20.min 0'
-	echo 'estimatesmartfee20.cdef estimatesmartfee20,97656,*'
+	for BLOCKS in 2 3 4 5 6 7 8 9 10 20 25 30 40 50 75 100
+	do
+		echo estimatesmartfee${BLOCKS}.label estimatesmartfee ${BLOCKS} blocks
+		echo estimatesmartfee${BLOCKS}.type GAUGE
+		echo estimatesmartfee${BLOCKS}.min 0
+		echo estimatesmartfee${BLOCKS}.cdef estimatesmartfee${BLOCKS},97656,*
+	done
 	exit 0
 fi
 
@@ -83,27 +66,13 @@ ${BITCOIN_CLI} -datadir=$BITCOIN_DATADIR getnetworkinfo > $TFILE
 echo "relayfee.value `grep relayfee $TFILE | grep -o '[0-9\.]*'`"
 
 ${BITCOIN_CLI} -datadir=$BITCOIN_DATADIR getmempoolinfo > $TFILE
-echo "mempoolminfee.value `grep mempoolminfee $TFILE | grep -o '[0-9\.]*'`"
+echo "mempoolminfee.value `grep mempoolminfee $TFILE | grep -o '[0-9\.]*'`" | grep -v -e ".* 1$"
 
-${BITCOIN_CLI} -datadir=$BITCOIN_DATADIR estimatesmartfee 1 > $TFILE
-echo "estimatesmartfee1.value `grep feerate $TFILE | grep -o '[0-9\.]*'`"
 
-${BITCOIN_CLI} -datadir=$BITCOIN_DATADIR estimatesmartfee 2 > $TFILE
-echo "estimatesmartfee2.value `grep feerate $TFILE | grep -o '[0-9\.]*'`"
-
-${BITCOIN_CLI} -datadir=$BITCOIN_DATADIR estimatesmartfee 3 > $TFILE
-echo "estimatesmartfee3.value `grep feerate $TFILE | grep -o '[0-9\.]*'`"
-
-${BITCOIN_CLI} -datadir=$BITCOIN_DATADIR estimatesmartfee 4 > $TFILE
-echo "estimatesmartfee4.value `grep feerate $TFILE | grep -o '[0-9\.]*'`"
-
-${BITCOIN_CLI} -datadir=$BITCOIN_DATADIR estimatesmartfee 5 > $TFILE
-echo "estimatesmartfee5.value `grep feerate $TFILE | grep -o '[0-9\.]*'`"
-
-${BITCOIN_CLI} -datadir=$BITCOIN_DATADIR estimatesmartfee 10 > $TFILE
-echo "estimatesmartfee10.value `grep feerate $TFILE | grep -o '[0-9\.]*'`"
-
-${BITCOIN_CLI} -datadir=$BITCOIN_DATADIR estimatesmartfee 20 > $TFILE
-echo "estimatesmartfee20.value `grep feerate $TFILE | grep -o '[0-9\.]*'`"
+for BLOCKS in 1 2 3 4 5 6 7 8 9 10 20 25 30 40 50 75 100
+do
+        ${BITCOIN_CLI} -datadir=$BITCOIN_DATADIR estimatesmartfee ${BLOCKS} > $TFILE
+        echo "estimatesmartfee${BLOCKS}.value `grep feerate $TFILE | grep -o '[0-9\.]*'`" | grep -v -e ".* 1$"
+done
 
 rm $TFILE
