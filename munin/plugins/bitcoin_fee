@@ -46,17 +46,17 @@ if [ "$1" = "config" ]; then
 	echo 'relayfee.type GAUGE'
 	echo 'mempoolminfee.label mempoolminfee'
 	echo 'mempoolminfee.type GAUGE'
-	echo 'mempoolminfee.cdef mempoolminfee,97656,*'
+	echo 'mempoolminfee.cdef mempoolminfee,100000,*'
 	echo 'estimatesmartfee1.label estimatesmartfee 1 block'
 	echo 'estimatesmartfee1.type GAUGE'
 	echo 'estimatesmartfee1.min 0'
-	echo 'estimatesmartfee1.cdef estimatesmartfee1,97656,*'
+	echo 'estimatesmartfee1.cdef estimatesmartfee1,100000,*'
 	for BLOCKS in 2 3 4 5 6 7 8 9 10 20 25 30 40 50 75 100
 	do
 		echo estimatesmartfee${BLOCKS}.label estimatesmartfee ${BLOCKS} blocks
 		echo estimatesmartfee${BLOCKS}.type GAUGE
 		echo estimatesmartfee${BLOCKS}.min 0
-		echo estimatesmartfee${BLOCKS}.cdef estimatesmartfee${BLOCKS},97656,*
+		echo estimatesmartfee${BLOCKS}.cdef estimatesmartfee${BLOCKS},100000,*
 	done
 	exit 0
 fi
