@@ -51,7 +51,8 @@ if [ "$1" = "config" ]; then
 	echo 'estimatesmartfee1.type GAUGE'
 	echo 'estimatesmartfee1.min 0'
 	echo 'estimatesmartfee1.cdef estimatesmartfee1,100000,*'
-	for BLOCKS in 2 3 4 5 6 7 8 9 10 20 25 30 40 50 75 100
+	# Core suggests providing options for targets of: 2,4,6,12,24,48,144,504,1008 where 1008 is one week.
+	for BLOCKS in 2 4 6 12 24 48 144 504 1008
 	do
 		echo estimatesmartfee${BLOCKS}.label estimatesmartfee ${BLOCKS} blocks
 		echo estimatesmartfee${BLOCKS}.type GAUGE
@@ -69,7 +70,8 @@ ${BITCOIN_CLI} -datadir=$BITCOIN_DATADIR getmempoolinfo > $TFILE
 echo "mempoolminfee.value `grep mempoolminfee $TFILE | grep -o '[0-9\.]*'`" | grep -v -e ".* 1$"
 
 
-for BLOCKS in 1 2 3 4 5 6 7 8 9 10 20 25 30 40 50 75 100
+# Core suggests providing options for targets of: 2,4,6,12,24,48,144,504,1008 where 1008 is one week.
+for BLOCKS in 1 2 4 6 12 24 48 144 504 1008
 do
         ${BITCOIN_CLI} -datadir=$BITCOIN_DATADIR estimatesmartfee ${BLOCKS} > $TFILE
         echo "estimatesmartfee${BLOCKS}.value `grep feerate $TFILE | grep -o '[0-9\.]*'`" | grep -v -e ".* 1$"
