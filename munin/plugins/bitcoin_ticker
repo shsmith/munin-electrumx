@@ -51,6 +51,7 @@ if [ "$1" = "config" ]; then
 	echo 'gemini.label gemini.com'
 	echo 'hitbtc.label hitbtc.com'
 	echo 'kraken.label kraken.com'
+	echo 'btce.label wex.nz (btc-e)'
 	echo 'winkdex.label winkdex.com'
 	exit 0
 fi
@@ -126,6 +127,13 @@ try:
 except:
  pass'
 
+curl -m 10 -L -s 'https://wex.nz/api/3/ticker/btc_usd' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin); print("btce.value " + str(j["btc_usd"]["last"]))
+except:
+ pass'
+ 
 curl -m 10 -L -s 'http://winkdex.com/api/v0/price' | python3 -c '
 import sys, json
 try:
