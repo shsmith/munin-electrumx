@@ -75,7 +75,6 @@ if [ "$1" = "config" ]; then
 	echo 'graph_vlabel CNY'
 	echo 'graph_category bitcoind'
 	echo 'coinmarketcap_cny.label coinmarketcap.com'
-	echo 'chbtc_cny.label chbtc.com'
 	exit 0
 fi
 
@@ -144,13 +143,5 @@ echo $hitbtc  | tr '#' '\n' | grep usd
 echo $kraken | tr '#' '\n' | grep usd
 
 echo multigraph bch_cny
-
-curl -m 10 -L -s 'http://api.chbtc.com/data/v1/ticker?currency=bcc_cny' | python3 -c '
-import sys, json
-try:
- j=json.load(sys.stdin)
- print("chbtc_cny.value " + j["ticker"]["last"])
-except:
- pass'
 
 echo $coinmarketcap | tr '#' '\n' | grep cny
