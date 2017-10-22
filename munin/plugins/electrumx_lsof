@@ -50,9 +50,9 @@ if [ "$1" = "config" ]; then
 	echo 'ipv6.label ipv6'
 	echo 'ipv6.type GAUGE'
 	echo 'ipv6.max 10000'
-	echo 'sock.label sock'
-	echo 'sock.type GAUGE'
-	echo 'sock.max 10000'
+#	echo 'sock.label sock'
+#	echo 'sock.type GAUGE'
+#	echo 'sock.max 10000'
 	echo 'db.label db'
 	echo 'db.type GAUGE'
 	echo 'db.max 10000'
@@ -105,7 +105,7 @@ leak=`expr $ipv4 + $ipv6 - $sessions + 1`
 echo "lsof.value $total"
 echo "ipv4.value $ipv4"
 echo "ipv6.value $ipv6"
-echo "sock.value $socks"
+#echo "sock.value $socks"
 echo "db.value $db"
 echo "leak.value $leak"
 
