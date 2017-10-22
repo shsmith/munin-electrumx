@@ -42,101 +42,126 @@ if [ "$1" = "config" ]; then
 	echo 'graph_vlabel USD'
 	echo 'graph_category bitcoind'
 	echo 'bitcoinaverage.label bitcoinaverage.com'
+	echo 'bitcoinaverage.max 100000'
 	echo 'blockchain.label blockchain.info'
+	echo 'blockchain.max 100000'
 	echo 'cexio.label cex.io'
+	echo 'cexio.max 100000'
 	echo 'coinbase.label coinbase.com (gdax)'
+	echo 'coinbase.max 100000'
 	echo 'coindesk.label coindesk.com'
+	echo 'coindesk.max 100000'
 	echo 'coinmarketcap.label coinmarketcap.com'
+	echo 'coinmarketcap.max 100000'
 	echo 'cryptonator.label cryptonator.com'
+	echo 'cryptonator.max 100000'
 	echo 'gemini.label gemini.com'
+	echo 'gemini.max 100000'
 	echo 'hitbtc.label hitbtc.com'
+	echo 'hitbtc.max 100000'
 	echo 'kraken.label kraken.com'
+	echo 'kraken.max 100000'
 	echo 'btce.label wex.nz (btc-e)'
+	echo 'btce.max 100000'
 	echo 'winkdex.label winkdex.com'
+	echo 'winkdex.max 100000'
 	exit 0
 fi
 
 curl -m 10 -L -s 'apiv2.bitcoinaverage.com/indices/global/ticker/BTCUSD' | python3 -c '
 import sys, json
 try:
- j=json.load(sys.stdin); print("bitcoinaverage.value " + str(j["last"]))
+ j=json.load(sys.stdin); p=j["last"]
+ print("bitcoinaverage.value " + str(p))
 except:
  pass'
 
 curl -m 10 -s 'blockchain.info/ticker' | python3 -c '
 import sys, json
 try:
- j=json.load(sys.stdin); print("blockchain.value " + str(j["USD"]["last"]))
+ j=json.load(sys.stdin); p=j["USD"]["last"]
+ print("blockchain.value " + str(p))
 except:
  pass'
 
 curl -m 10 -L -s 'api.gdax.com/products/BTC-USD/ticker' | python3 -c '
 import sys, json
 try:
- j=json.load(sys.stdin); print("coinbase.value " + str(j["price"]))
+ j=json.load(sys.stdin); p=j["price"]
+ print("coinbase.value " + str(p))
 except:
  pass'
 
 curl -m 10 -L -s 'https://cex.io/api/last_price/BTC/USD' | python3 -c '
 import sys, json
 try:
- j=json.load(sys.stdin); print("cexio.value " + str(j["lprice"]))
+ j=json.load(sys.stdin); p=j["lprice"]
+ print("cexio.value " + str(p))
 except:
  pass'
 
 curl -m 10 -L -s 'api.coindesk.com/v1/bpi/currentprice.json' | python3 -c '
 import sys, json
 try:
- j=json.load(sys.stdin); print("coindesk.value " + str(j["bpi"]["USD"]["rate_float"]))
+ j=json.load(sys.stdin); p=j["bpi"]["USD"]["rate_float"]
+ print("coindesk.value " + str(p))
 except:
  pass'
 
 curl -m 10 -L -s 'https://api.coinmarketcap.com/v1/ticker/bitcoin' | python3 -c '
 import sys, json
 try:
- j=json.load(sys.stdin); print("coinmarketcap.value " + str(j[0]["price_usd"]))
+ j=json.load(sys.stdin); p=j[0]["price_usd"]
+ print("coinmarketcap.value " + str(p))
 except:
  pass'
 
 curl -m 10 -L -s 'https://api.cryptonator.com/api/ticker/btc-usd' | python3 -c '
 import sys, json
 try:
- j=json.load(sys.stdin)
- print("cryptonator.value " + j["ticker"]["price"])
+ j=json.load(sys.stdin); p=float(j["ticker"]["price"])
+ if p < 100000:
+  print("cryptonator.value " + str(p))
 except:
  pass'
 
 curl -m 10 -L -s 'https://api.gemini.com/v1/pubticker/BTCUSD' | python3 -c '
 import sys, json
 try:
- j=json.load(sys.stdin); print("gemini.value " + str(j["last"]))
+ j=json.load(sys.stdin); p=j["last"]
+ print("gemini.value " + str(p))
 except:
  pass'
 
 curl -m 10 -L -s 'https://api.hitbtc.com/api/1/public/BTCUSD/ticker' | python3 -c '
 import sys, json
 try:
- j=json.load(sys.stdin); print("hitbtc.value " + str(j["last"]))
+ j=json.load(sys.stdin); p=j["last"]
+ print("hitbtc.value " + str(p))
 except:
  pass'
 
 curl -m 10 -L -s 'https://api.kraken.com/0/public/Ticker?pair=XBTUSD' | python3 -c '
 import sys, json
 try:
- j=json.load(sys.stdin); print("kraken.value " + str(j["result"]["XXBTZUSD"]["c"][0]))
+ j=json.load(sys.stdin); p=float(j["result"]["XXBTZUSD"]["c"][0])
+ if p < 100000:
+   print("kraken.value " + str(p))
 except:
  pass'
 
 curl -m 10 -L -s 'https://wex.nz/api/3/ticker/btc_usd' | python3 -c '
 import sys, json
 try:
- j=json.load(sys.stdin); print("btce.value " + str(j["btc_usd"]["last"]))
+ j=json.load(sys.stdin); p=j["btc_usd"]["last"]
+ print("btce.value " + str(p))
 except:
  pass'
  
 curl -m 10 -L -s 'http://winkdex.com/api/v0/price' | python3 -c '
 import sys, json
 try:
- j=json.load(sys.stdin); print("winkdex.value " + str(float(j["price"])/100))
+ j=json.load(sys.stdin); p=float(j["price"])/100
+ print("winkdex.value " + str(p))
 except:
  pass'
