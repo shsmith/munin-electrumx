@@ -92,8 +92,8 @@ hitbtc=`curl -m 10 -L -s 'https://api.hitbtc.com/api/1/public/ticker' | python3 
 import sys, json
 try:
  j=json.load(sys.stdin)
- print("#hitbtc_btc.value " + str(j["BCCBTC"]["last"]))
- print("#hitbtc_usd.value " + str(j["BCCUSD"]["last"]))
+ print("#hitbtc_btc.value " + str(j["BCHBTC"]["last"]))
+ print("#hitbtc_usd.value " + str(j["BCHUSD"]["last"]))
 except:
  pass'`
 
