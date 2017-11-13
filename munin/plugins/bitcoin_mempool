@@ -1,0 +1,138 @@
+#!/usr/bin/perl -w
+# -*-  perl -*-
+
+=head1 NAME
+
+bitcoin_mempool - Plugin to monitor bitcoin daemon.
+
+=head1 CONFIGURATION
+
+Settings are stored in /etc/munin/plugin-conf.d/bitcoin.
+Edit the BITCOIN_DATADIR setting to specify the location of your bitcoin data directory.
+Edit the BITCOIN_CLI setting to specify the location of bitcoin-cli.
+
+=head1 NOTES
+
+Uses env.BITCOIN_CLI and env.BITCOIN_DATADIR in /etc/munin/plugin-conf.d/bitcoin
+
+=head1 AUTHOR
+
+shsmith
+
+=head1 LICENSE
+
+GPLv2
+
+=head1 MAGIC MARKERS
+
+ #%# family=auto
+ #%# capabilities=autoconf
+
+=cut
+
+use strict;
+use Munin::Plugin;
+
+my @feelimit=(0,5,10,20,30,40,50,60,70,80,90,100,120,140,160,180,200,220,240,260,280,300,350,400,450,500,550,600,650,700,750,800,850,900,950,1000);
+
+sub range {
+	my $i = shift;
+	if ($i == @feelimit-1) { return sprintf("%s+ satoshi/byte", $feelimit[$i]); }
+	else { return sprintf("%s-%s satoshi/byte", $feelimit[$i], $feelimit[$i+1]); }
+}
+
+my $i;
+
+my $mode = ($ARGV[0] or "print");
+
+if ($mode eq 'autoconf') {
+	print "yes\n";
+	exit 0
+}
+
+if ($mode eq 'config') {
+	print "multigraph mempool_count\n";
+	print "graph_title bitcoind memory pool - transaction counts\n";
+	print "graph_args --base 1000 -l 0\n";
+	print "graph_vlabel count\n";
+	print "graph_category bitcoind\n";
+	for ($i = 0; $i< @feelimit; $i++) {
+		my $r = range($i);
+		print "range_$feelimit[$i].label $r\n";
+		print "range_$feelimit[$i].type GAUGE\n";
+		print "range_$feelimit[$i].draw AREASTACK\n";
+	}
+
+	print "multigraph mempool_total\n";
+	print "graph_title bitcoind memory pool - mempool total size\n";
+	print "graph_args --base 1000 -l 0\n";
+	print "graph_vlabel size total (bytes)\n";
+	print "graph_category bitcoind\n";
+	for ($i = 0; $i< @feelimit; $i++) {
+		my $r = range($i);
+		print "range_$feelimit[$i].label $r\n";
+		print "range_$feelimit[$i].type GAUGE\n";
+		print "range_$feelimit[$i].draw AREASTACK\n";
+	}
+
+	print "multigraph mempool_fees\n";
+	print "graph_title bitcoind memory pool - pending transaction fees\n";
+	print "graph_args --base 1000 -l 0\n";
+	print "graph_vlabel total (BTC)\n";
+	print "graph_category bitcoind\n";
+	for ($i = 0; $i< @feelimit; $i++) {
+		my $r = range($i);
+		print "range_$feelimit[$i].label $r\n";
+		print "range_$feelimit[$i].type GAUGE\n";
+		print "range_$feelimit[$i].draw AREASTACK\n";
+	}
+
+	exit 0
+}
+
+my @total=(); 
+my @count=(); 
+my @fees=();
+for ($i = 0; $i< @feelimit; $i++) { 
+	$total[$i] = 0; 
+	$count[$i] = 0; 
+	$fees[$i] = 0; 
+}
+
+my $size = 0;
+my $fee = 0;
+my $feeperbyte = 0;
+
+open (MP, "$ENV{'BITCOIN_CLI'} -datadir=$ENV{'BITCOIN_DATADIR'} getrawmempool true|") or die "Unable to open pipe from $ENV{'BITCOIN_CLI'}";
+while(<MP>) {
+	/"size": (\d+)/ and $size = $1;
+	/"fee": (\d*\.\d+)/ and $fee = int($1*1e8 + .5);
+	if (/},/) {
+		$feeperbyte = $fee / $size;
+		for ($i = 0; $i< @feelimit; $i++) {
+			if ($i == @feelimit-1 or $feeperbyte < $feelimit[$i+1]) {
+				$total[$i] += $size; 
+				$count[$i]++; 
+				$fees[$i] += $fee;
+				last;
+			}
+		}
+	}
+}
+close MP;
+
+if ($count[0]) {
+	print "multigraph mempool_count\n";
+	for ($i = 0; $i< @feelimit; $i++) {
+		print "range_$feelimit[$i].value $count[$i]\n";
+	}
+	print "multigraph mempool_total\n";
+	for ($i = 0; $i< @feelimit; $i++) {
+		print "range_$feelimit[$i].value $total[$i]\n";
+	}
+	print "multigraph mempool_fees\n";
+	for ($i = 0; $i< @feelimit; $i++) {
+		my $btc = $fees[$i]/1e8;
+		print "range_$feelimit[$i].value $btc\n";
+	}
+}

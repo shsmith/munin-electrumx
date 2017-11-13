@@ -33,6 +33,7 @@ Once you have munin up and running, add the following files::
     bitcoin_diff
     bitcoin_du
     bitcoin_fee
+    bitcoin_mempool
     bitcoin_mp
     bitcoin_mp2
     bitcoin_peer_versions
@@ -76,9 +77,9 @@ These plugins are working with the following software versions::
 
  Operating System:   Ubuntu 16.04
  Munin-Node:         2.0.25
- ElectrumX:          1.0.15
- Bitcoin Core:       0.14.2
- Bitcoin ABC:        0.14.6
+ ElectrumX:          1.2
+ Bitcoin Core:       0.15.1
+ Bitcoin ABC:        0.16.0
 
 Live Example
 ------------
