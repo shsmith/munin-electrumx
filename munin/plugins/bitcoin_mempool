@@ -121,18 +121,18 @@ while(<MP>) {
 }
 close MP;
 
-if ($count[0]) {
-	print "multigraph mempool_count\n";
-	for ($i = 0; $i< @feelimit; $i++) {
-		print "range_$feelimit[$i].value $count[$i]\n";
-	}
-	print "multigraph mempool_total\n";
-	for ($i = 0; $i< @feelimit; $i++) {
-		print "range_$feelimit[$i].value $total[$i]\n";
-	}
-	print "multigraph mempool_fees\n";
-	for ($i = 0; $i< @feelimit; $i++) {
-		my $btc = $fees[$i]/1e8;
-		print "range_$feelimit[$i].value $btc\n";
-	}
+print "multigraph mempool_count\n";
+for ($i = 0; $i< @feelimit; $i++) {
+	print "range_$feelimit[$i].value $count[$i]\n";
+}
+
+print "multigraph mempool_total\n";
+for ($i = 0; $i< @feelimit; $i++) {
+	print "range_$feelimit[$i].value $total[$i]\n";
+}
+
+print "multigraph mempool_fees\n";
+for ($i = 0; $i< @feelimit; $i++) {
+	my $btc = $fees[$i]/1e8;
+	print "range_$feelimit[$i].value $btc\n";
 }
