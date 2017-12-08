@@ -72,6 +72,14 @@ You will need to edit /etc/munin/plugin-conf.d/electrumx.
 
 - Adjust the ``ELECTRUMX_RPC`` environment to specify where to find electrumx_rpc.py.
 
+You will need to make the munin plugins executable.
+***************************************************
+
+The munin plugins must be marked as executable.
+You can do so using this command::
+
+    sudo chmod +x /etc/munin/plugins/*
+
 After configuring the plugins, restart the munin-node service.
 
 Versions
