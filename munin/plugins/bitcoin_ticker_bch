@@ -5,7 +5,7 @@
 
 =head1 NAME
 
-bitcoin_ticker_bch - Plugin to monitor bcash tickers.
+bitcoin_ticker_bch - Plugin to monitor BCH tickers.
 
 =head1 CONFIGURATION
 
@@ -37,11 +37,12 @@ fi
 
 if [ "$1" = "config" ]; then
 	echo 'multigraph bch_btc'
-	echo 'graph_title bcash tickers - btc'
+	echo 'graph_title BCH tickers - BTC'
 	echo 'graph_args --base 1000'
 	#echo 'graph_scale no'
 	echo 'graph_vlabel BTC'
 	echo 'graph_category bitcoind'
+	echo 'bitcoinaverage_btc.label bitcoinaverage.com'
 	echo 'cexio_btc.label cex.io'
 	echo 'cexio_btc.max 10'
 	echo 'coinmarketcap_btc.label coinmarketcap.com'
@@ -54,11 +55,12 @@ if [ "$1" = "config" ]; then
 	echo 'shapeshift_btc.max 10'
 
 	echo 'multigraph bch_usd'
-	echo 'graph_title bcash tickers - usd'
+	echo 'graph_title BCH tickers - USD'
 	echo 'graph_args --base 1000'
 	echo 'graph_scale no'
 	echo 'graph_vlabel USD'
 	echo 'graph_category bitcoind'
+	echo 'bitcoinaverage_usd.label bitcoinaverage.com'
 	echo 'cexio_usd.label cex.io'
 	echo 'cexio_usd.max 10000'
 	echo 'coinmarketcap_usd.label coinmarketcap.com'
@@ -69,11 +71,12 @@ if [ "$1" = "config" ]; then
 	echo 'kraken_usd.max 10000'
 
 	echo 'multigraph bch_cny'
-	echo 'graph_title bcash tickers - cny'
+	echo 'graph_title BCH tickers - CNY'
 	echo 'graph_args --base 1000'
 	echo 'graph_scale no'
 	echo 'graph_vlabel CNY'
 	echo 'graph_category bitcoind'
+	echo 'bitcoinaverage_cny.label bitcoinaverage.com'
 	echo 'coinmarketcap_cny.label coinmarketcap.com'
 	exit 0
 fi
@@ -97,7 +100,7 @@ try:
 except:
  pass'`
 
-kraken=`curl -m 10 -L -s 'https://api.kraken.com/0/public/Ticker?pair=BCHUSD,BCHXBT' | python3 -c '
+kraken=`curl -m 20 -L -s 'https://api.kraken.com/0/public/Ticker?pair=BCHUSD,BCHXBT' | python3 -c '
 import sys, json
 try:
  j=json.load(sys.stdin)
@@ -107,6 +110,14 @@ except:
  pass'`
 
 echo multigraph bch_btc
+
+curl -m 10 -L -s 'https://apiv2.bitcoinaverage.com/indices/global/ticker/BCHBTC' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin); p=j["last"]
+ print("bitcoinaverage_btc.value " + str(p))
+except:
+ pass'
 
 curl -m 10 -L -s 'https://cex.io/api/last_price/BCH/BTC' | python3 -c '
 import sys, json
@@ -130,6 +141,14 @@ except:
 
 echo multigraph bch_usd
 
+curl -m 10 -L -s 'https://apiv2.bitcoinaverage.com/indices/global/ticker/BCHUSD' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin); p=j["last"]
+ print("bitcoinaverage_usd.value " + str(p))
+except:
+ pass'
+
 curl -m 10 -L -s 'https://cex.io/api/last_price/BCH/USD' | python3 -c '
 import sys, json
 try:
@@ -143,5 +162,13 @@ echo $hitbtc  | tr '#' '\n' | grep usd
 echo $kraken | tr '#' '\n' | grep usd
 
 echo multigraph bch_cny
+
+curl -m 10 -L -s 'https://apiv2.bitcoinaverage.com/indices/global/ticker/BCHCNY' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin); p=j["last"]
+ print("bitcoinaverage_cny.value " + str(p))
+except:
+ pass'
 
 echo $coinmarketcap | tr '#' '\n' | grep cny

@@ -36,7 +36,7 @@ if [ "$1" = "autoconf" ]; then
 fi
 
 if [ "$1" = "config" ]; then
-	echo 'graph_title bitcoin tickers - usd'
+	echo 'graph_title Bitcoin tickers - USD'
 	echo 'graph_args --base 1000'
 	echo 'graph_scale no'
 	echo 'graph_vlabel USD'
@@ -68,7 +68,7 @@ if [ "$1" = "config" ]; then
 	exit 0
 fi
 
-curl -m 10 -L -s 'apiv2.bitcoinaverage.com/indices/global/ticker/BTCUSD' | python3 -c '
+curl -m 10 -L -s 'https://apiv2.bitcoinaverage.com/indices/global/ticker/BTCUSD' | python3 -c '
 import sys, json
 try:
  j=json.load(sys.stdin); p=j["last"]
@@ -76,7 +76,7 @@ try:
 except:
  pass'
 
-curl -m 10 -s 'blockchain.info/ticker' | python3 -c '
+curl -m 10 -s 'https://blockchain.info/ticker' | python3 -c '
 import sys, json
 try:
  j=json.load(sys.stdin); p=j["USD"]["last"]
@@ -84,7 +84,7 @@ try:
 except:
  pass'
 
-curl -m 10 -L -s 'api.gdax.com/products/BTC-USD/ticker' | python3 -c '
+curl -m 10 -L -s 'https://api.gdax.com/products/BTC-USD/ticker' | python3 -c '
 import sys, json
 try:
  j=json.load(sys.stdin); p=j["price"]
@@ -100,7 +100,7 @@ try:
 except:
  pass'
 
-curl -m 10 -L -s 'api.coindesk.com/v1/bpi/currentprice.json' | python3 -c '
+curl -m 10 -L -s 'https://api.coindesk.com/v1/bpi/currentprice.json' | python3 -c '
 import sys, json
 try:
  j=json.load(sys.stdin); p=j["bpi"]["USD"]["rate_float"]
@@ -141,7 +141,7 @@ try:
 except:
  pass'
 
-curl -m 10 -L -s 'https://api.kraken.com/0/public/Ticker?pair=XBTUSD' | python3 -c '
+curl -m 20 -L -s 'https://api.kraken.com/0/public/Ticker?pair=XBTUSD' | python3 -c '
 import sys, json
 try:
  j=json.load(sys.stdin); p=float(j["result"]["XXBTZUSD"]["c"][0])
