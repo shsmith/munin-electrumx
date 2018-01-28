@@ -39,12 +39,13 @@ if [ "$1" = "config" ]; then
 	echo 'multigraph bch_btc'
 	echo 'graph_title BCH tickers - BTC'
 	echo 'graph_args --base 1000'
-	#echo 'graph_scale no'
 	echo 'graph_vlabel BTC'
 	echo 'graph_category bitcoind'
 	echo 'bitcoinaverage_btc.label bitcoinaverage.com'
 	echo 'cexio_btc.label cex.io'
 	echo 'cexio_btc.max 10'
+	echo 'coinbase_btc.label coinbase.com (gdax)'
+	echo 'coinbase_btc.max 100000'
 	echo 'coinmarketcap_btc.label coinmarketcap.com'
 	echo 'coinmarketcap_btc.max 10'
 	echo 'hitbtc_btc.label hitbtc.com'
@@ -63,6 +64,8 @@ if [ "$1" = "config" ]; then
 	echo 'bitcoinaverage_usd.label bitcoinaverage.com'
 	echo 'cexio_usd.label cex.io'
 	echo 'cexio_usd.max 10000'
+	echo 'coinbase_usd.label coinbase.com (gdax)'
+	echo 'coinbase_usd.max 100000'
 	echo 'coinmarketcap_usd.label coinmarketcap.com'
 	echo 'coinmarketcap_usd.max 10000'
 	echo 'hitbtc_usd.label hitbtc.com'
@@ -111,11 +114,19 @@ except:
 
 echo multigraph bch_btc
 
-curl -m 10 -L -s 'https://apiv2.bitcoinaverage.com/indices/global/ticker/BCHBTC' | python3 -c '
+curl -m 10 -L -s 'https://apiv2.bitcoinaverage.com/indices/crypto/ticker/BCHBTC' | python3 -c '
 import sys, json
 try:
  j=json.load(sys.stdin); p=j["last"]
  print("bitcoinaverage_btc.value " + str(p))
+except:
+ pass'
+
+curl -m 10 -L -s 'https://api.gdax.com/products/BCH-BTC/ticker' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin); p=j["price"]
+ print("coinbase_btc.value " + str(p))
 except:
  pass'
 
@@ -154,6 +165,14 @@ import sys, json
 try:
  j=json.load(sys.stdin)
  print("cexio_usd.value " + str(j["lprice"]))
+except:
+ pass'
+
+curl -m 10 -L -s 'https://api.gdax.com/products/BCH-USD/ticker' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin); p=j["price"]
+ print("coinbase_usd.value " + str(p))
 except:
  pass'
 

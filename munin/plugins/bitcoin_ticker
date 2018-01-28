@@ -63,8 +63,6 @@ if [ "$1" = "config" ]; then
 	echo 'kraken.max 100000'
 	echo 'btce.label wex.nz (btc-e)'
 	echo 'btce.max 100000'
-	echo 'winkdex.label winkdex.com'
-	echo 'winkdex.max 100000'
 	exit 0
 fi
 
@@ -155,13 +153,5 @@ import sys, json
 try:
  j=json.load(sys.stdin); p=j["btc_usd"]["last"]
  print("btce.value " + str(p))
-except:
- pass'
- 
-curl -m 10 -L -s 'http://winkdex.com/api/v0/price' | python3 -c '
-import sys, json
-try:
- j=json.load(sys.stdin); p=float(j["price"])/100
- print("winkdex.value " + str(p))
 except:
  pass'
