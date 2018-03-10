@@ -39,7 +39,7 @@ known_versions() {
 	# get new version items, sanitize as valid munin identifiers
 	${BITCOIN_CLI} -datadir=$BITCOIN_DATADIR getpeerinfo | grep subver | grep / | tr '"' ' ' | sed 's/     subver :  //g; s/ ,//g' | \
 		cut -c 1-45 | \
-		sed 's/ /_SP_/g; s#/#_SL_#g; s/:/_CO_/g; s/\./_DP_/g; s/;/_SC_/g; s/(/_OP_/g; s/)/_CL_/g; s/[^a-zA-Z0-9_]/-/g' > ${vfile}.new
+		sed 's/+/_PL_/g; s/ /_SP_/g; s#/#_SL_#g; s/:/_CO_/g; s/\./_DP_/g; s/;/_SC_/g; s/(/_OP_/g; s/)/_CL_/g; s/[^a-zA-Z0-9_]/-/g' > ${vfile}.new
 
 	# combine with previously known versions
 	if [ -e ${vfile}.known ]; then
@@ -62,7 +62,7 @@ if [ "$1" = "config" ]; then
 	echo 'graph_args --base 1000 -l 0'
 	echo 'graph_vlabel peers'
 	echo 'graph_category bitcoind'
-	known_versions | awk '{v=$2; gsub("_SL_","/",$2); gsub("_CO_",":"); gsub("_DP_",".",$2); gsub("_SC_",";",$2); gsub("_OP_","(",$2); gsub("_CL_",")",$2); gsub("_SP_"," ",$2); printf "version_%s.label %s\nversion_%s.draw AREASTACK\n", v, $2, v}'
+	known_versions | awk '{v=$2; gsub("_PL_","+",$2); gsub("_SL_","/",$2); gsub("_CO_",":"); gsub("_DP_",".",$2); gsub("_SC_",";",$2); gsub("_OP_","(",$2); gsub("_CL_",")",$2); gsub("_SP_"," ",$2); printf "version_%s.label %s\nversion_%s.draw AREASTACK\n", v, $2, v}'
 	exit 0
 fi
 
