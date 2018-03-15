@@ -22,8 +22,8 @@ Install munin and apache2.  For Ubuntu systems the commands are::
 
 The electrumx_bw plugin uses nethogs. To install it::
 
-	sudo apt-get install nethogs
-	
+    sudo apt-get install nethogs
+
 Once you have munin up and running, add the following files::
 
  /etc/munin/plugins/
@@ -39,6 +39,7 @@ Once you have munin up and running, add the following files::
     bitcoin_peer_versions
     bitcoin_ticker
     bitcoin_ticker_bch
+    bitcoin_tx
     bitcoin_vm
     electrumx_bw
     electrumx_client_versions

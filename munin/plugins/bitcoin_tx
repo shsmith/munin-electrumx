@@ -1,0 +1,60 @@
+#!/bin/sh
+# -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+bitcoin_tx - Plugin to monitor bitcoin daemon.
+
+=head1 CONFIGURATION
+
+Settings are stored in /etc/munin/plugin-conf.d/bitcoin.
+Edit the BITCOIN_DATADIR setting to specify the location of your bitcoin data directory.
+Edit the BITCOIN_CLI setting to specify the location of bitcoin-cli.
+
+=head1 NOTES
+
+Uses 'journalctl -u bitcoind' to read the output of bitcoind. 
+Substitute a different command line if you are not using systemd.
+
+=head1 AUTHOR
+
+shsmith
+
+=head1 LICENSE
+
+GPLv2
+
+=head1 MAGIC MARKERS
+
+ #%# family=auto
+ #%# capabilities=autoconf
+
+=cut
+
+if [ "$1" = "autoconf" ]; then
+	echo yes
+	exit 0
+fi
+
+if [ "$1" = "config" ]; then
+	echo 'graph_title bitcoind transaction rate'
+	echo 'graph_args --base 1000 -l 0'
+	echo 'graph_vlabel TX/hour'
+	echo 'graph_category bitcoind'
+	echo 'tx.label total tx rate'
+	echo 'tx.type DERIVE'
+	echo 'tx.min 0'
+	echo 'tx.cdef tx,3600,*'
+	exit 0
+fi
+
+# read the last 30 minutes of bitcoind journal output
+# extract the last tx count line and format into tx.value
+
+# here is an example of the expected format:
+# 1          2   3                                                                     4             5                  6                   7
+# UpdateTip: new best=0000000000000000004a82d02ca8eef95b69752f699d2d778da37bfb6afd943b height=513552 version=0x20000000 log2_work=88.352313 tx=304721851 date='2018-03-14 21:34:41' progress=1.000000 cache=11.4MiB(27134txo)
+
+journalctl -u bitcoind -o cat --since "30 minutes ago" | grep tx= | tail -1 | awk '{gsub("tx=","tx.value ",$7); print $7}'
