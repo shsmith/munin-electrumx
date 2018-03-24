@@ -40,7 +40,7 @@ fi
 if [ "$1" = "config" ]; then
 	echo 'graph_title bitcoind fees'
 	echo 'graph_args --base 1000 -l 0'
-	echo 'graph_vlabel satoshi/byte'
+	echo 'graph_vlabel satoshi per byte'
 	echo 'graph_category bitcoind'
 	echo 'relayfee.label relayfee'
 	echo 'relayfee.type GAUGE'

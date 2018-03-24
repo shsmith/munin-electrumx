@@ -40,7 +40,7 @@ fi
 if [ "$1" = "config" ]; then
 	echo 'graph_title bitcoind connections'
 	echo 'graph_args --base 1000 -l 0'
-	echo 'graph_vlabel value'
+	echo 'graph_vlabel connections'
 	echo 'graph_category bitcoind'
 	echo 'connections.label Connections'
 	echo 'connections.type GAUGE'

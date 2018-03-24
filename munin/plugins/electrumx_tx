@@ -39,9 +39,9 @@ fi
 if [ "$1" = "config" ]; then
 	echo 'graph_title ElectrumX Transactions'
 	echo 'graph_args --base 1000 -l 0'
-	echo 'graph_vlabel value'
+	echo 'graph_vlabel transactions per hour'
 	echo 'graph_category ElectrumX'
-	echo 'txs_sent.label txs_sent (TX/hour)'
+	echo 'txs_sent.label txs_sent'
 	echo 'txs_sent.type DERIVE'
 	echo 'txs_sent.min 0'
 	echo 'txs_sent.max 1000000'
