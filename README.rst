@@ -90,9 +90,9 @@ These plugins are working with the following software versions::
 
  Operating System:   Ubuntu 16.04
  Munin-Node:         2.0.25
- ElectrumX:          1.3+
+ ElectrumX:          1.4.4p2
  Bitcoin Core:       0.16.0
- Bitcoin ABC:        0.16.2
+ Bitcoin ABC:        0.17.2
 
 Live Example
 ------------

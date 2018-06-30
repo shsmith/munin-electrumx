@@ -47,7 +47,7 @@ if [ "$1" = "config" ]; then
 	echo 'blockchain.max 100000'
 	echo 'cexio.label cex.io'
 	echo 'cexio.max 100000'
-	echo 'coinbase.label coinbase.com (gdax)'
+	echo 'coinbase.label coinbase.com'
 	echo 'coinbase.max 100000'
 	echo 'coindesk.label coindesk.com'
 	echo 'coindesk.max 100000'
@@ -82,7 +82,7 @@ try:
 except:
  pass'
 
-curl -m 10 -L -s 'https://api.gdax.com/products/BTC-USD/ticker' | python3 -c '
+curl -m 10 -L -s 'https://api.pro.coinbase.com/products/BTC-USD/ticker' | python3 -c '
 import sys, json
 try:
  j=json.load(sys.stdin); p=j["price"]

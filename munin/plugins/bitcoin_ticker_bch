@@ -44,7 +44,7 @@ if [ "$1" = "config" ]; then
 	echo 'bitcoinaverage_btc.label bitcoinaverage.com'
 	echo 'cexio_btc.label cex.io'
 	echo 'cexio_btc.max 10'
-	echo 'coinbase_btc.label coinbase.com (gdax)'
+	echo 'coinbase_btc.label coinbase.com'
 	echo 'coinbase_btc.max 100000'
 	echo 'coinmarketcap_btc.label coinmarketcap.com'
 	echo 'coinmarketcap_btc.max 10'
@@ -64,7 +64,7 @@ if [ "$1" = "config" ]; then
 	echo 'bitcoinaverage_usd.label bitcoinaverage.com'
 	echo 'cexio_usd.label cex.io'
 	echo 'cexio_usd.max 10000'
-	echo 'coinbase_usd.label coinbase.com (gdax)'
+	echo 'coinbase_usd.label coinbase.com'
 	echo 'coinbase_usd.max 100000'
 	echo 'coinmarketcap_usd.label coinmarketcap.com'
 	echo 'coinmarketcap_usd.max 10000'
@@ -122,7 +122,7 @@ try:
 except:
  pass'
 
-curl -m 10 -L -s 'https://api.gdax.com/products/BCH-BTC/ticker' | python3 -c '
+curl -m 10 -L -s 'https://api.pro.coinbase.com/products/BCH-BTC/ticker' | python3 -c '
 import sys, json
 try:
  j=json.load(sys.stdin); p=j["price"]
@@ -168,7 +168,7 @@ try:
 except:
  pass'
 
-curl -m 10 -L -s 'https://api.gdax.com/products/BCH-USD/ticker' | python3 -c '
+curl -m 10 -L -s 'https://api.pro.coinbase.com/products/BCH-USD/ticker' | python3 -c '
 import sys, json
 try:
  j=json.load(sys.stdin); p=j["price"]
