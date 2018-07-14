@@ -2,4 +2,4 @@
 [electrumx_*]
 user root
 env.RPC_PORT 8000
-env.ELECTRUMX_RPC /usr/local/bin/electrumx_rpc.py
+env.ELECTRUMX_RPC /usr/local/bin/electrumx_rpc
