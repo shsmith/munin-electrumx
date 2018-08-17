@@ -46,4 +46,4 @@ fi
 
 # extract the last tx count line and format into tx.value
 
-echo "tx.value `${BITCOIN_CLI} getchaintxstats | grep txcount | grep -o '[0-9]*'`"
+echo "tx.value `${BITCOIN_CLI} -datadir=$BITCOIN_DATADIR getchaintxstats | grep txcount | grep -o '[0-9]*'`"
