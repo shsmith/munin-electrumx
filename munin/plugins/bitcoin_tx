@@ -44,11 +44,6 @@ if [ "$1" = "config" ]; then
 	exit 0
 fi
 
-# read the last 30 minutes of bitcoind journal output
 # extract the last tx count line and format into tx.value
 
-# here is an example of the expected format:
-# 1          2   3                                                                     4             5                  6                   7
-# UpdateTip: new best=0000000000000000004a82d02ca8eef95b69752f699d2d778da37bfb6afd943b height=513552 version=0x20000000 log2_work=88.352313 tx=304721851 date='2018-03-14 21:34:41' progress=1.000000 cache=11.4MiB(27134txo)
-
-journalctl -o cat --since "60 minutes ago" | grep UpdateTip | tail -1 | awk '{gsub("tx=","tx.value ",$7); print $7}'
+echo "tx.value `${BITCOIN_CLI} getchaintxstats | grep txcount | grep -o '[0-9]*'`"
