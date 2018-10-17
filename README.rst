@@ -88,10 +88,10 @@ Versions
 
 These plugins are working with the following software versions::
 
- Operating System:   Ubuntu 16.04
+ Operating System:   Ubuntu 18.04
  Munin-Node:         2.0.25
- ElectrumX:          1.8.4
- Bitcoin Core:       0.16.2
+ ElectrumX:          1.8.7
+ Bitcoin Core:       0.17.0
  Bitcoin ABC:        0.17.2
 
 Live Example

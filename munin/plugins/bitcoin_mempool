@@ -108,7 +108,9 @@ while(<MP>) {
 	/"size": (\d+)/ and $size = $1;
 	/"fee": (\d*\.\d+)/ and $fee = int($1*1e8 + .5);
 	if (/},/) {
-		$feeperbyte = $fee / $size;
+		if ($size > 0) {
+			$feeperbyte = $fee / $size;
+		}
 		for ($i = 0; $i< @feelimit; $i++) {
 			if ($i == @feelimit-1 or $feeperbyte < $feelimit[$i+1]) {
 				$total[$i] += $size; 
