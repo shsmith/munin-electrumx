@@ -1,0 +1,81 @@
+#!/bin/sh
+# -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+bitcoin_ticker_bchsv - Plugin to monitor BCHSV tickers.
+
+=head1 CONFIGURATION
+
+No configuration.
+
+=head1 NOTES
+
+Uses python3.
+
+=head1 AUTHOR
+
+shsmith
+
+=head1 LICENSE
+
+GPLv2
+
+=head1 MAGIC MARKERS
+
+ #%# family=auto
+ #%# capabilities=autoconf
+
+=cut
+
+if [ "$1" = "autoconf" ]; then
+	echo yes
+	exit 0
+fi
+
+if [ "$1" = "config" ]; then
+	echo 'multigraph bchsv_btc'
+	echo 'graph_title BCHSV tickers - BTC'
+	echo 'graph_args --base 1000'
+	echo 'graph_vlabel BTC'
+	echo 'graph_category bitcoind'
+	echo 'coinmarketcap_btc.label coinmarketcap.com'
+
+	echo 'multigraph bchsv_usd'
+	echo 'graph_title BCHSV tickers - USD'
+	echo 'graph_args --base 1000'
+	echo 'graph_scale no'
+	echo 'graph_vlabel USD'
+	echo 'graph_category bitcoind'
+	echo 'coinmarketcap_usd.label coinmarketcap.com'
+
+	echo 'multigraph bchsv_cny'
+	echo 'graph_title BCHSV tickers - CNY'
+	echo 'graph_args --base 1000'
+	echo 'graph_scale no'
+	echo 'graph_vlabel CNY'
+	echo 'graph_category bitcoind'
+	echo 'coinmarketcap_cny.label coinmarketcap.com'
+	exit 0
+fi
+
+coinmarketcap=`curl -m 10 -L -s 'https://api.coinmarketcap.com/v1/ticker/bitcoin-cash-sv/?convert=CNY' | python3 -c '
+import sys, json
+try:
+ j=json.load(sys.stdin)
+ print("#coinmarketcap_btc.value " + j[0]["price_btc"])
+ print("#coinmarketcap_usd.value " + j[0]["price_usd"])
+ print("#coinmarketcap_cny.value " + j[0]["price_cny"])
+except:
+ pass'`
+
+echo multigraph bchsv_btc
+echo $coinmarketcap | tr '#' '\n' | grep btc
+
+echo multigraph bchsv_usd
+echo $coinmarketcap | tr '#' '\n' | grep usd
+
+echo multigraph bchsv_cny
+echo $coinmarketcap | tr '#' '\n' | grep cny
