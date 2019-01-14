@@ -43,6 +43,7 @@ Once you have munin up and running, add the following files::
     bitcoin_tx
     bitcoin_vm
     electrumx_bw
+    electrumx_client_protocol
     electrumx_client_versions
     electrumx_err
     electrumx_io

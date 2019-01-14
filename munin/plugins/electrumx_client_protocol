@@ -1,0 +1,74 @@
+#!/bin/sh
+# -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+electrumx_client_protocol - Plugin to monitor ElectrumX server.
+
+=head1 CONFIGURATION
+
+=head1 NOTES
+
+Uses env.ELECTRUMX_RPC in /etc/munin/plugin-conf.d/electrumx
+
+=head1 AUTHOR
+
+shsmith
+
+=head1 LICENSE
+
+GPLv2
+
+=head1 MAGIC MARKERS
+
+ #%# family=auto
+ #%# capabilities=autoconf
+
+=cut
+
+# return count+1 and protocol for current and all previously seen protocols
+known_protocols() {
+	vfile=/tmp/electrumx_client_protocols
+	knownfile=${vfile}.known
+	temp=${vfile}-$$
+
+	# get new protocol items, sanitize as valid munin identifiers
+	${ELECTRUMX_RPC} sessions | awk 'FPAT=" (1\\.[0-9]+|RPC) " {print $1}' | sed 's/ //g' > ${temp}i
+
+	# combine with previously known protocols
+	echo "Proto" >> ${knownfile}
+	cat ${knownfile} >> ${temp}i
+	grep < ${temp}i -e RPC -e [0-9]\\.[0-9] | sort > ${temp}o
+	uniq < ${temp}o > ${knownfile}
+
+	# return count+1 and protocol
+	# limit to the most active 100 protocols
+	sed < ${temp}o 's/[^a-zA-Z0-9_]/-/g' | uniq -c | sort -n -r | head -n 100
+	rm ${temp}*
+}
+
+# quit of daemon is not responding to RPC
+uptime=`${ELECTRUMX_RPC} getinfo | grep -o uptime`
+if [ "$uptime" = "" ]; then
+	echo "${ELECTRUMX_RPC} not ready"
+	exit 0
+fi
+
+if [ "$1" = "autoconf" ]; then
+	echo yes
+	exit 0
+fi
+
+if [ "$1" = "config" ]; then
+	echo 'graph_title ElectrumX Client Protocols'
+	echo 'graph_args --base 1000 -l 0'
+	echo 'graph_vlabel sessions'
+	echo 'graph_category ElectrumX'
+	known_protocols | awk '{v=$2; gsub("-",".",$2); printf "protocol_%s.label %s\nprotocol_%s.draw AREASTACK\n", v, $2, v}'
+	exit 0
+fi
+
+# subtract 1 from each count (allows 0 to be retained in historical charts)
+known_protocols | awk '{printf "protocol_%s.value %d\n", $2, $1-1}'
