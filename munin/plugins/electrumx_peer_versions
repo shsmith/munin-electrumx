@@ -37,7 +37,15 @@ known_versions() {
 	vfile=/tmp/electrumx_peer_versions
 
 	# get new version items, sanitize as valid munin identifiers
-	${ELECTRUMX_RPC} peers | cut -c51-68 | grep -v Server | sed 's/ /_/g; s#/#AA#g; s/+/plus/g; s/[^a-zA-Z0-9_]/-/g; s/-*$//' > ${vfile}.new
+	# also strip out blacklisted peers
+	${ELECTRUMX_RPC} peers | python3 -c '
+import sys, json, requests
+blacklist = json.loads(requests.get("https://electrum.org/blacklist.json").text)
+for peer in sys.stdin:
+        host = peer.split(" ",1)[0]
+        if not any(item in blacklist for item in (host, "*." + ".".join(host.split(".")[-2:]))):
+                print(peer.rstrip())
+' | cut -c51-68 | grep -v Server | sed 's/ /_/g; s#/#AA#g; s/+/plus/g; s/[^a-zA-Z0-9_]/-/g; s/-*$//' > ${vfile}.new
 
 	# combine with previously known versions
 	if [ -e ${vfile}.known ]; then
@@ -56,7 +64,7 @@ if [ "$uptime" = "" ]; then
 	echo "${ELECTRUMX_RPC} not ready"
 	exit 0
 fi
-	
+
 if [ "$1" = "autoconf" ]; then
 	echo yes
 	exit 0

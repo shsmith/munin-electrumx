@@ -1,0 +1,52 @@
+#!/bin/sh
+# -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+electrumx_connrate - Plugin to monitor ElectrumX server.
+
+=head1 CONFIGURATION
+
+Settings are stored in /etc/munin/plugin-conf.d/electrumx.
+Edit the ELECTRUMX_RPC setting to specify the location of electrumx_rpc.py.
+
+=head1 NOTES
+
+Uses env.ELECTRUMX_RPC in /etc/munin/plugin-conf.d/electrumx
+
+=head1 AUTHOR
+
+shsmith
+
+=head1 LICENSE
+
+GPLv2
+
+=head1 MAGIC MARKERS
+
+ #%# family=auto
+ #%# capabilities=autoconf
+
+=cut
+
+if [ "$1" = "autoconf" ]; then
+	echo yes
+	exit 0
+fi
+
+if [ "$1" = "config" ]; then
+	echo 'graph_title ElectrumX Connection Rate'
+	echo 'graph_args --base 1000 -l 0'
+	echo 'graph_vlabel connections per hour'
+	echo 'graph_category ElectrumX'
+	echo 'conn_rate.label connections'
+	echo 'conn_rate.type DERIVE'
+	echo 'conn_rate.min 0'
+	echo 'conn_rate.max 1000000'
+	echo 'conn_rate.cdef conn_rate,3600,*'
+	exit 0
+fi
+
+${ELECTRUMX_RPC} sessions | grep -v RPC | tail -1 | awk '{ print "conn_rate.value " $1 }'

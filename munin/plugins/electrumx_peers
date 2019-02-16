@@ -43,12 +43,16 @@ if [ "$1" = "config" ]; then
 	echo 'graph_category ElectrumX'
 	echo 'bad.label Bad'
 	echo 'bad.type GAUGE'
-	echo 'current.label Good'
+	echo 'current.label Current'
 	echo 'current.type GAUGE'
 	echo 'never.label Never'
 	echo 'never.type GAUGE'
 	echo 'stale.label Stale'
 	echo 'stale.type GAUGE'
+	echo 'blacklisted.label Blacklisted'
+	echo 'blacklisted.type GAUGE'
+	echo 'good.label Good'
+	echo 'good.type GAUGE'
 	echo 'peers.label Total'
 	echo 'peers.type GAUGE'
 	exit 0
@@ -82,9 +86,22 @@ TFILE=/tmp/munin-electrumx-peers-$$
 ${ELECTRUMX_RPC} getinfo > $TFILE
 
 echo "bad.value `grep bad $TFILE | grep -o '[0-9]*'`"
-echo "current.value `grep good $TFILE | grep -o '[0-9]*'`"
+CURRENT=`grep good $TFILE | grep -o '[0-9]*'`
+echo "current.value $CURRENT"
 echo "never.value `grep never $TFILE | grep -o '[0-9]*'`"
 echo "stale.value `grep stale $TFILE | grep -o '[0-9]*'`"
 echo "peers.value `grep total $TFILE | grep -o '[0-9]*'`"
+
+BLACKLISTED=`${ELECTRUMX_RPC} peers | python3 -c '
+import sys, json, requests
+blacklist = json.loads(requests.get("https://electrum.org/blacklist.json").text)
+for peer in sys.stdin:
+        host = peer.split(" ",1)[0]
+        if any(item in blacklist for item in (host, "*." + ".".join(host.split(".")[-2:]))):
+                print(peer.rstrip())
+' | wc -l`
+
+echo "blacklisted.value $BLACKLISTED"
+echo "good.value `expr $CURRENT - $BLACKLISTED`"
 
 rm $TFILE
