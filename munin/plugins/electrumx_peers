@@ -92,7 +92,7 @@ echo "never.value `grep never $TFILE | grep -o '[0-9]*'`"
 echo "stale.value `grep stale $TFILE | grep -o '[0-9]*'`"
 echo "peers.value `grep total $TFILE | grep -o '[0-9]*'`"
 
-BLACKLISTED=`${ELECTRUMX_RPC} peers | python3 -c '
+BLACKLISTED=`${ELECTRUMX_RPC} peers | grep good | python3 -c '
 import sys, json, requests
 blacklist = json.loads(requests.get("https://electrum.org/blacklist.json").text)
 for peer in sys.stdin:

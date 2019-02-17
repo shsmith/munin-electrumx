@@ -59,7 +59,7 @@ mySessions=`grep sessions $TFILE | grep -o '[0-9]*'`
 
 currentPeers=`grep good $TFILE | grep -o '[0-9]*'`
 
-blacklistedPeers=`${ELECTRUMX_RPC} peers | python3 -c '
+blacklistedPeers=`${ELECTRUMX_RPC} peers | grep good | python3 -c '
 import sys, json, requests
 blacklist = json.loads(requests.get("https://electrum.org/blacklist.json").text)
 for peer in sys.stdin:
