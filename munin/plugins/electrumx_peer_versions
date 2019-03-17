@@ -38,14 +38,15 @@ known_versions() {
 
 	# get new version items, sanitize as valid munin identifiers
 	# also strip out blacklisted peers
-	${ELECTRUMX_RPC} peers | python3 -c '
+	${ELECTRUMX_RPC} peers | grep good | python3 -c '
 import sys, json, requests
 blacklist = json.loads(requests.get("https://electrum.org/blacklist.json").text)
 for peer in sys.stdin:
         host = peer.split(" ",1)[0]
-        if not any(item in blacklist for item in (host, "*." + ".".join(host.split(".")[-2:]))):
+        pat = "*." + ".".join(host.split(".")[-2:])
+        if not any(item in blacklist for item in (host, pat)):
                 print(peer.rstrip())
-' | cut -c51-68 | grep -v Server | sed 's/ /_/g; s#/#AA#g; s/+/plus/g; s/[^a-zA-Z0-9_]/-/g; s/-*$//' > ${vfile}.new
+' | awk '{print substr($0, index($0,"good"))}' | cut -c20-37 | sed 's/ /_/g; s#/#AA#g; s/+/plus/g; s/[^a-zA-Z0-9_]/-/g; s/-*$//' > ${vfile}.new
 
 	# combine with previously known versions
 	if [ -e ${vfile}.known ]; then
