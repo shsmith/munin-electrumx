@@ -49,4 +49,5 @@ if [ "$1" = "config" ]; then
 	exit 0
 fi
 
-${ELECTRUMX_RPC} sessions | grep -v RPC | tail -1 | awk '{ print "conn_rate.value " $1 }'
+sessions=`${ELECTRUMX_RPC} getinfo | grep sessions | grep -o '[0-9]*'`
+echo "conn_rate.value " $sessions

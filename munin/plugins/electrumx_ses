@@ -48,23 +48,63 @@ if [ "$1" = "config" ]; then
 fi
 
 #{
-#    "closing": 0,
-#    "daemon_height": 443912,
-#    "db_height": 443912,
-#    "errors": 0,
-#    "groups": 1,
-#    "logged": 0,
-#    "peers": 53,
-#    "pid": 23142,
-#    "requests": 0,
-#    "sessions": 50,
-#    "subs": 974,
-#    "txs_sent": 1
+#    "coin": "BitcoinSegwit",
+#    "daemon": "127.0.0.1:8332/",
+#    "daemon height": 572624,
+#    "db height": 572624,
+#    "groups": 23,
+#    "history cache": "39,818 lookups 7,040 hits 1,000 entries",
+#    "merkle cache": "43,260 lookups 21,801 hits 1,000 entries",
+#    "peers": {
+#        "bad": 0,
+#        "good": 0,
+#        "never": 0,
+#        "stale": 0,
+#        "total": 0
+#    },
+#    "pid": 40652,
+#    "request counts": {
+#        "blockchain.block.header": 1145,
+#        "blockchain.block.headers": 440,
+#        "blockchain.estimatefee": 26860,
+#        "blockchain.headers.subscribe": 19547,
+#        "blockchain.relayfee": 3479,
+#        "blockchain.scripthash.get_history": 1998,
+#        "blockchain.scripthash.listunspent": 20,
+#        "blockchain.scripthash.subscribe": 37787,
+#        "blockchain.transaction.get": 98395,
+#        "blockchain.transaction.get_merkle": 47372,
+#        "disconnect": 20035,
+#        "getinfo": 10421,
+#        "mempool.get_fee_histogram": 6718,
+#        "peers": 3104,
+#        "server.banner": 3484,
+#        "server.donation_address": 3522,
+#        "server.peers.subscribe": 3,
+#        "server.ping": 570,
+#        "server.version": 24474,
+#        "sessions": 31938
+#    },
+#    "request total": 341312,
+#    "sessions": {
+#        "count": 5,
+#        "count with subs": 1,
+#        "errors": 0,
+#        "logged": 0,
+#        "paused": 0,
+#        "pending requests": 1,
+#        "subs": 31
+#    },
+#    "tx hashes cache": "47,372 lookups 15,373 hits 1,000 entries",
+#    "txs sent": 0,
+#    "uptime": "1d 23h 34m",
+#    "version": "ElectrumX 1.11.0"
 #}
 
 TFILE=/tmp/munin-electrumx-ses-$$
 ${ELECTRUMX_RPC} getinfo > $TFILE
 
-echo "sessions.value `grep sessions $TFILE | grep -o '[0-9]*'`"
+sessions=`grep \"count\" $TFILE | grep -o '[0-9]*'`
+echo "sessions.value $sessions"
 
 rm $TFILE

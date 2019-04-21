@@ -93,7 +93,7 @@ These plugins are working with the following software versions::
 
  Operating System:   Ubuntu 18.04
  Munin-Node:         2.0.25
- ElectrumX:          1.9.5
+ ElectrumX:          1.11.0
  Bitcoin Core:       0.17.1
  Bitcoin ABC:        0.18.4
  Bitcoin SV:         0.1.0

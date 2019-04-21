@@ -84,7 +84,7 @@ TFILE=/tmp/munin-electrumx-lsof-$$
 ${ELECTRUMX_RPC} getinfo > $TFILE
 
 pid=`grep pid $TFILE | grep -o '[0-9]*'`
-sessions=`grep sessions $TFILE | grep -o '[0-9]*'`
+sessions=`grep \"count\" $TFILE | grep -o '[0-9]*'`
 echo "sessions.value $sessions"
 
 /usr/bin/lsof -p $pid -n | grep -v -e lib/python -e LISTEN > $TFILE
