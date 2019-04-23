@@ -172,6 +172,7 @@ echo blockchain_scripthash_listunspent.value `grep \\"blockchain.scripthash.list
 echo blockchain_scripthash_subscribe.value `grep \\"blockchain.scripthash.subscribe\\" $TFILE | grep -o '[0-9]*'`
 echo blockchain_transaction_get.value `grep \\"blockchain.transaction.get\\" $TFILE | grep -o '[0-9]*'`
 echo blockchain_transaction_get_merkle.value `grep \\"blockchain.transaction.get.merkle\\" $TFILE | grep -o '[0-9]*'`
+echo disconnect.value `grep \\"disconnect\\" $TFILE | grep -o '[0-9]*'`
 echo getinfo.value `grep \\"getinfo\\" $TFILE | grep -o '[0-9]*'`
 echo mempool_get_fee_histogram.value `grep \\"mempool.get.fee.histogram\\" $TFILE | grep -o '[0-9]*'`
 echo peers.value `grep \\"peers\\" $TFILE | grep -o '[0-9]*'`
