@@ -129,8 +129,8 @@ fi
 TFILE=/tmp/munin-electrumx-reqcounts-$$
 ${ELECTRUMX_RPC} getinfo > $TFILE
 
-grep '\"history cache\"' $TFILE | sed 's/"//g; s/,//g' | awk '{ print "history_cache_lookups.value " $3 "\nhistory_cache_hits " $5 "\nhistory_cache_entries " $7 }'
-grep '\"merkle cache\"' $TFILE | sed 's/"//g; s/,//g'  | awk '{ print "merkle_cache_lookups.value " $3 "\nmerkle_cache_hits " $5 "\nmerkle_cache_entries " $7 }'
-grep '\"tx hashes cache\"' $TFILE | sed 's/"//g; s/,//g'  | awk '{ print "tx_hashes_cache_lookups.value " $4 "\ntx_hashes_cache_hits " $6 "\ntx_hashes_cache_entries " $8 }'
+grep '\"history cache\"' $TFILE | sed 's/"//g; s/,//g' | awk '{ print "history_cache_lookups.value " $3 "\nhistory_cache_hits.value " $5 "\nhistory_cache_entries.value " $7 }'
+grep '\"merkle cache\"' $TFILE | sed 's/"//g; s/,//g'  | awk '{ print "merkle_cache_lookups.value " $3 "\nmerkle_cache_hits.value " $5 "\nmerkle_cache_entries.value " $7 }'
+grep '\"tx hashes cache\"' $TFILE | sed 's/"//g; s/,//g'  | awk '{ print "tx_hashes_cache_lookups.value " $4 "\ntx_hashes_cache_hits.value " $6 "\ntx_hashes_cache_entries.value " $8 }'
 
 rm $TFILE

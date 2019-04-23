@@ -56,12 +56,12 @@ if [ "$1" = "config" ]; then
 	echo 'blockchain_relayfee.label blockchain.relayfee'
 	echo 'blockchain_relayfee.type DERIVE'
 	echo 'blockchain_relayfee.min 0'
-	echo 'blockchain_scripthash_get_balance.label blockchain.scripthash.get_balance'
-	echo 'blockchain_scripthash_get_balance.type DERIVE'
-	echo 'blockchain_scripthash_get_balance.min 0'
 	echo 'blockchain_scripthash_get_history.label blockchain.scripthash.get_history'
 	echo 'blockchain_scripthash_get_history.type DERIVE'
 	echo 'blockchain_scripthash_get_history.min 0'
+	echo 'blockchain_scripthash_listunspent.label blockchain.scripthash.listunspent'
+	echo 'blockchain_scripthash_listunspent.type DERIVE'
+	echo 'blockchain_scripthash_listunspent.min 0'
 	echo 'blockchain_scripthash_subscribe.label blockchain.scripthash.subscribe'
 	echo 'blockchain_scripthash_subscribe.type DERIVE'
 	echo 'blockchain_scripthash_subscribe.min 0'
@@ -71,30 +71,24 @@ if [ "$1" = "config" ]; then
 	echo 'blockchain_transaction_get_merkle.label blockchain.transaction.get_merkle'
 	echo 'blockchain_transaction_get_merkle.type DERIVE'
 	echo 'blockchain_transaction_get_merkle.min 0'
+	echo 'disconnect.label disconnect'
+	echo 'disconnect.type DERIVE'
+	echo 'disconnect.min 0'
 	echo 'getinfo.label getinfo'
 	echo 'getinfo.type DERIVE'
 	echo 'getinfo.min 0'
-	echo 'invalid.label invalid'
-	echo 'invalid.type DERIVE'
-	echo 'invalid.min 0'
 	echo 'mempool_get_fee_histogram.label mempool.get_fee_histogram'
 	echo 'mempool_get_fee_histogram.type DERIVE'
 	echo 'mempool_get_fee_histogram.min 0'
 	echo 'peers.label peers'
 	echo 'peers.type DERIVE'
 	echo 'peers.min 0'
-	echo 'server_add_peer.label server.add_peer'
-	echo 'server_add_peer.type DERIVE'
-	echo 'server_add_peer.min 0'
 	echo 'server_banner.label server.banner'
 	echo 'server_banner.type DERIVE'
 	echo 'server_banner.min 0'
 	echo 'server_donation_address.label server.donation_address'
 	echo 'server_donation_address.type DERIVE'
 	echo 'server_donation_address.min 0'
-	echo 'server_features.label server.features'
-	echo 'server_features.type DERIVE'
-	echo 'server_features.min 0'
 	echo 'server_peers_subscribe.label server.peers.subscribe'
 	echo 'server_peers_subscribe.type DERIVE'
 	echo 'server_peers_subscribe.min 0'
@@ -114,11 +108,11 @@ fi
 #{
 #    "coin": "BitcoinSegwit",
 #    "daemon": "127.0.0.1:8332/",
-#    "daemon height": 572624,
-#    "db height": 572624,
-#    "groups": 23,
-#    "history cache": "39,818 lookups 7,040 hits 1,000 entries",
-#    "merkle cache": "43,260 lookups 21,801 hits 1,000 entries",
+#    "daemon height": 572877,
+#    "db height": 572877,
+#    "groups": 18,
+#    "history cache": "592 lookups 57 hits 502 entries",
+#    "merkle cache": "109 lookups 1 hits 108 entries",
 #    "peers": {
 #        "bad": 0,
 #        "good": 0,
@@ -126,69 +120,66 @@ fi
 #        "stale": 0,
 #        "total": 0
 #    },
-#    "pid": 40652,
+#    "pid": 121656,
 #    "request counts": {
-#        "blockchain.block.header": 1145,
-#        "blockchain.block.headers": 440,
-#        "blockchain.estimatefee": 26860,
-#        "blockchain.headers.subscribe": 19547,
-#        "blockchain.relayfee": 3479,
-#        "blockchain.scripthash.get_history": 1998,
-#        "blockchain.scripthash.listunspent": 20,
-#        "blockchain.scripthash.subscribe": 37787,
-#        "blockchain.transaction.get": 98395,
-#        "blockchain.transaction.get_merkle": 47372,
-#        "disconnect": 20035,
-#        "getinfo": 10421,
-#        "mempool.get_fee_histogram": 6718,
-#        "peers": 3104,
-#        "server.banner": 3484,
-#        "server.donation_address": 3522,
-#        "server.peers.subscribe": 3,
-#        "server.ping": 570,
-#        "server.version": 24474,
-#        "sessions": 31938
+#        "blockchain.block.header": 115,
+#        "blockchain.block.headers": 56,
+#        "blockchain.estimatefee": 1839,
+#        "blockchain.headers.subscribe": 5377,
+#        "blockchain.relayfee": 40,
+#        "blockchain.scripthash.get_history": 30,
+#        "blockchain.scripthash.listunspent": 11,
+#        "blockchain.scripthash.subscribe": 562,
+#        "blockchain.transaction.get": 28,
+#        "blockchain.transaction.get_merkle": 109,
+#        "disconnect": 7364,
+#        "getinfo": 4618,
+#        "mempool.get_fee_histogram": 460,
+#        "peers": 866,
+#        "server.banner": 41,
+#        "server.donation_address": 52,
+#        "server.peers.subscribe": 2,
+#        "server.ping": 215,
+#        "server.version": 7582,
+#        "sessions": 12186
 #    },
-#    "request total": 341312,
+#    "request total": 41553,
 #    "sessions": {
-#        "count": 5,
-#        "count with subs": 1,
+#        "count": 13,
+#        "count with subs": 0,
 #        "errors": 0,
 #        "logged": 0,
 #        "paused": 0,
 #        "pending requests": 1,
-#        "subs": 31
+#        "subs": 0
 #    },
-#    "tx hashes cache": "47,372 lookups 15,373 hits 1,000 entries",
+#    "tx hashes cache": "109 lookups 0 hits 108 entries",
 #    "txs sent": 0,
-#    "uptime": "1d 23h 34m",
+#    "uptime": "18h 00m 27s",
 #    "version": "ElectrumX 1.11.0"
 #}
 
 TFILE=/tmp/munin-electrumx-reqcounts-$$
 ${ELECTRUMX_RPC} getinfo > $TFILE
 
-echo blockchain.block.header.value `grep \\"blockchain.block.header\\" $TFILE | grep -o '[0-9]*'`
-echo blockchain.block.headers.value `grep \\"blockchain.block.headers\\" $TFILE | grep -o '[0-9]*'`
-echo blockchain.estimatefee.value `grep \\"blockchain.estimatefee\\" $TFILE | grep -o '[0-9]*'`
-echo blockchain.headers.subscribe.value `grep \\"blockchain.headers.subscribe\\" $TFILE | grep -o '[0-9]*'`
-echo blockchain.relayfee.value `grep \\"blockchain.relayfee\\" $TFILE | grep -o '[0-9]*'`
-echo blockchain.scripthash.get.balance.value `grep \\"blockchain.scripthash.get.balance\\" $TFILE | grep -o '[0-9]*'`
-echo blockchain.scripthash.get.history.value `grep \\"blockchain.scripthash.get.history\\" $TFILE | grep -o '[0-9]*'`
-echo blockchain.scripthash.subscribe.value `grep \\"blockchain.scripthash.subscribe\\" $TFILE | grep -o '[0-9]*'`
-echo blockchain.transaction.get.value `grep \\"blockchain.transaction.get\\" $TFILE | grep -o '[0-9]*'`
-echo blockchain.transaction.get.merkle.value `grep \\"blockchain.transaction.get.merkle\\" $TFILE | grep -o '[0-9]*'`
+echo blockchain_block_header.value `grep \\"blockchain.block.header\\" $TFILE | grep -o '[0-9]*'`
+echo blockchain_block_headers.value `grep \\"blockchain.block.headers\\" $TFILE | grep -o '[0-9]*'`
+echo blockchain_estimatefee.value `grep \\"blockchain.estimatefee\\" $TFILE | grep -o '[0-9]*'`
+echo blockchain_headers_subscribe.value `grep \\"blockchain.headers.subscribe\\" $TFILE | grep -o '[0-9]*'`
+echo blockchain_relayfee.value `grep \\"blockchain.relayfee\\" $TFILE | grep -o '[0-9]*'`
+echo blockchain_scripthash_get_history.value `grep \\"blockchain.scripthash.get_history\\" $TFILE | grep -o '[0-9]*'`
+echo blockchain_scripthash_listunspent.value `grep \\"blockchain.scripthash.listunspent\\" $TFILE | grep -o '[0-9]*'`
+echo blockchain_scripthash_subscribe.value `grep \\"blockchain.scripthash.subscribe\\" $TFILE | grep -o '[0-9]*'`
+echo blockchain_transaction_get.value `grep \\"blockchain.transaction.get\\" $TFILE | grep -o '[0-9]*'`
+echo blockchain_transaction_get_merkle.value `grep \\"blockchain.transaction.get.merkle\\" $TFILE | grep -o '[0-9]*'`
 echo getinfo.value `grep \\"getinfo\\" $TFILE | grep -o '[0-9]*'`
-echo invalid.value `grep \\"invalid\\" $TFILE | grep -o '[0-9]*'`
-echo mempool.get.fee.histogram.value `grep \\"mempool.get.fee.histogram\\" $TFILE | grep -o '[0-9]*'`
+echo mempool_get_fee_histogram.value `grep \\"mempool.get.fee.histogram\\" $TFILE | grep -o '[0-9]*'`
 echo peers.value `grep \\"peers\\" $TFILE | grep -o '[0-9]*'`
-echo server.add.peer.value `grep \\"server.add.peer\\" $TFILE | grep -o '[0-9]*'`
-echo server.banner.value `grep \\"server.banner\\" $TFILE | grep -o '[0-9]*'`
-echo server.donation.address.value `grep \\"server.donation.address\\" $TFILE | grep -o '[0-9]*'`
-echo server.features.value `grep \\"server.features\\" $TFILE | grep -o '[0-9]*'`
-echo server.peers.subscribe.value `grep \\"server.peers.subscribe\\" $TFILE | grep -o '[0-9]*'`
-echo server.ping.value `grep \\"server.ping\\" $TFILE | grep -o '[0-9]*'`
-echo server.version.value `grep \\"server.version\\" $TFILE | grep -o '[0-9]*'`
+echo server_banner.value `grep \\"server.banner\\" $TFILE | grep -o '[0-9]*'`
+echo server_donation_address.value `grep \\"server.donation.address\\" $TFILE | grep -o '[0-9]*'`
+echo server_peers_subscribe.value `grep \\"server.peers.subscribe\\" $TFILE | grep -o '[0-9]*'`
+echo server_ping.value `grep \\"server.ping\\" $TFILE | grep -o '[0-9]*'`
+echo server_version.value `grep \\"server.version\\" $TFILE | grep -o '[0-9]*'`
 echo sessions.value `grep \\"sessions\\" $TFILE | grep -o '[0-9]*'`
 
 rm $TFILE
