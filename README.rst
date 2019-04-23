@@ -43,6 +43,7 @@ Once you have munin up and running, add the following files::
     bitcoin_tx
     bitcoin_vm
     electrumx_bw
+    electrumx_caches
     electrumx_client_protocol
     electrumx_client_versions
     electrumx_connrate
@@ -52,6 +53,7 @@ Once you have munin up and running, add the following files::
     electrumx_mem
     electrumx_peers
     electrumx_peer_versions
+    electrumx_reqcounts
     electrumx_ses
     electrumx_sub
     electrumx_tx
